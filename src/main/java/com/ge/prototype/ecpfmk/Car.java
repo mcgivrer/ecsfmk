@@ -28,6 +28,7 @@ public class Car {
 
 	private static final Logger logger = LoggerFactory.getLogger(Car.class);
 
+	public String name;
 	public World world;
 
 	public List<Vector2D> forces = new ArrayList<Vector2D>();
@@ -40,15 +41,20 @@ public class Car {
 	public float resistance = 0.89f;
 	public float elasticity = 0.22f;
 
+	public float stopTreshold = 0.20f;
+
 	public static final float CAR_ACCEL_X = 100.0f;
 	public static final float CAR_ACCEL_Y = 300.0f;
 	public static final float CAR_MAX_SPEED = 1000.0f;
 
+	public Color color = Color.GRAY;
+	
+	
 	/**
 	 * Default constructor to create a new Car.
 	 */
-	public Car(World world) {
-		this.world = world;
+	public Car(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -72,7 +78,7 @@ public class Car {
 		float t = dt * 0.005f;
 
 		forces.addAll(world.forces);
-		logger.info("acceleration={}", this.acceleration);
+		// logger.debug("acceleration = {}", this.acceleration);
 		for (Vector2D v : forces) {
 			this.acceleration = this.acceleration.add(v);
 		}
@@ -80,13 +86,12 @@ public class Car {
 		// compute velocity
 		this.velocity.x += (this.acceleration.x * t * t);
 		this.velocity.y += (this.acceleration.y * t * t);
-		logger.info("velocity={}", this.velocity);
+		// logger.debug("velocity = {}", this.velocity);
 
 		// compute position
 		this.position.x += 0.5f * (this.velocity.x * t);
 		this.position.y += 0.5f * (this.velocity.y * t);
-		logger.info("position={}", this.position);
-		forces.clear();
+		// logger.debug("position = {}", this.position);
 	}
 
 	/**
@@ -96,7 +101,7 @@ public class Car {
 	 *            the Graphics interface to use to draw the car.
 	 */
 	public void render(Graphics2D g) {
-		g.setColor(Color.RED);
+		g.setColor(color);
 		g.fillRect((int) position.x, (int) position.y, size.width, size.height);
 	}
 
@@ -115,6 +120,15 @@ public class Car {
 	 */
 	public Car setPosition(Vector2D position) {
 		this.position = position;
+		return this;
+	}
+
+	/**
+	 * @param resistance
+	 *            the resistance to set
+	 */
+	public Car setResistance(float resistance) {
+		this.resistance = resistance;
 		return this;
 	}
 
@@ -160,15 +174,6 @@ public class Car {
 	 */
 	public Car setMass(float mass) {
 		this.mass = mass;
-		return this;
-	}
-
-	/**
-	 * @param resistance
-	 *            the resistance to set
-	 */
-	public Car setResistance(float resistance) {
-		this.resistance = resistance;
 		return this;
 	}
 

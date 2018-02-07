@@ -97,7 +97,7 @@ public class Vector2D {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("(").append(x).append(",").append(y).append(")");
+		builder.append("(").append(String.format("%02.2f", x)).append(",").append(String.format("%02.2f", y)).append(")");
 		return builder.toString();
 	}
 

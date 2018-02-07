@@ -8,6 +8,7 @@ package com.ge.prototype.ecpfmk;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ge.prototype.ecpfmk.io.InputHandler;
 import com.ge.prototype.ecpfmk.math.Vector2D;
+import com.ge.prototype.ecpfmk.ui.DebugHelper;
 
 /**
  * The main application class to animate the simulation.
@@ -117,9 +119,16 @@ public class Application implements Runnable {
 			waitFPS();
 			elapsed = dt;
 			previousTime = currentTime;
-
+			postRenderOperation();
 		}
 		dispose();
+	}
+
+	/**
+	 * 
+	 */
+	private void postRenderOperation() {
+		car.forces.clear();
 	}
 
 	/**
@@ -138,8 +147,11 @@ public class Application implements Runnable {
 	 */
 	private void initialize() {
 		World world = new World(new Vector2D(0.0f, 98.1f));
-		car = new Car().setVelocity(new Vector2D(0.0f, 0.0f)).setPosition(new Vector2D(320.0f, 240.0f))
-				.setSize(new Rectangle(50, 20)).setWorld(world);
+		car = new Car("myCar")
+				.setWorld(world)
+				.setVelocity(new Vector2D(0.0f, 0.0f))
+				.setPosition(new Vector2D(320.0f, 240.0f))
+				.setSize(new Rectangle(50, 20));
 	}
 
 	/**
@@ -159,32 +171,52 @@ public class Application implements Runnable {
 	public void input(InputHandler ih) {
 		// accelerate
 		if (ih.keys[KeyEvent.VK_LEFT] && Math.abs(car.velocity.x) < Car.CAR_MAX_SPEED) {
-			car.forces.add(new Vector2D(-Car.CAR_ACCEL_X, 0.0f));
-			logger.info("Car p{},v{}, a{}", car.position, car.velocity, car.acceleration);
+			Vector2D moveLeft = new Vector2D(-Car.CAR_ACCEL_X, 0.0f);
+			car.forces.add(moveLeft);
+			logger.info("add left move by {}", moveLeft);
 		}
 		// break !
 		if (ih.keys[KeyEvent.VK_RIGHT] && Math.abs(car.velocity.x) < Car.CAR_MAX_SPEED) {
-			car.forces.add(new Vector2D(Car.CAR_ACCEL_X, 0.0f));
-			logger.info("Car p{},v{}, a{}", car.position, car.velocity, car.acceleration);
+			Vector2D moveRight = new Vector2D(Car.CAR_ACCEL_X, 0.0f);
+			car.forces.add(moveRight);
+			logger.info("add right move by {}", moveRight);
 		}
 		// Stop !
 		if (ih.keys[KeyEvent.VK_SPACE] && Math.abs(car.velocity.x) < Car.CAR_MAX_SPEED) {
-			if (car.velocity.x > 0.1f) {
-				car.forces.add(new Vector2D(Car.CAR_ACCEL_X, 0.0f));
-			} else {
-				car.velocity.x = 0.0f;
-				car.acceleration.x = 0.0f;
+			if (car.velocity.x != 0.0f) {
+				if (car.velocity.x > car.stopTreshold) {
+					car.forces.add(new Vector2D(-Car.CAR_ACCEL_X * 4, 0.0f));
+				} else if (car.velocity.x < -car.stopTreshold) {
+					car.forces.add(new Vector2D(Car.CAR_ACCEL_X * 4, 0.0f));
+				} else {
+					car.velocity.x = 0.0f;
+					car.acceleration.x = 0.0f;
+				}
 			}
-			logger.info("Car p{},v{}, a{}", car.position, car.velocity, car.acceleration);
+			if (car.velocity.y != 0.0f) {
+				if (car.velocity.y > car.stopTreshold) {
+					car.forces.add(new Vector2D(0.0f,-Car.CAR_ACCEL_X * 4));
+				} else if (car.velocity.y < -car.stopTreshold) {
+					car.forces.add(new Vector2D(0.0f,Car.CAR_ACCEL_X * 4));
+				} else {
+					car.velocity.y = 0.0f;
+					car.acceleration.y = 0.0f;
+				}
+			}
+			logger.info("request break");
 		}
 		// up !
 		if (ih.keys[KeyEvent.VK_UP] && Math.abs(car.velocity.y) < Car.CAR_MAX_SPEED) {
-			car.forces.add(new Vector2D(0.0f, -Car.CAR_ACCEL_Y));
-			logger.info("Car p{},v{}, a{}", car.position, car.velocity, car.acceleration);
+			Vector2D moveUp = new Vector2D(0.0f, -Car.CAR_ACCEL_Y);
+			car.forces.add(moveUp);
+			logger.info("add up move by {}", moveUp);
 		}
 		// nothing to do today.
 		if (ih.keys[KeyEvent.VK_DOWN] && Math.abs(car.velocity.y) < Car.CAR_MAX_SPEED) {
-			car.forces.add(new Vector2D(0.0f, Car.CAR_ACCEL_Y));
+			Vector2D moveDown = new Vector2D(0.0f, Car.CAR_ACCEL_Y);
+			car.forces.add(moveDown);
+			logger.info("add up move by {}", moveDown);
+			car.forces.add(moveDown);
 		}
 
 		// reset all
@@ -203,7 +235,7 @@ public class Application implements Runnable {
 		}
 
 		// stop rendering.
-		if (ih.keys[KeyEvent.VK_PAUSE]) {
+		if (ih.keys[KeyEvent.VK_PAUSE] || ih.keys[KeyEvent.VK_P]) {
 			this.pause = !this.pause;
 		}
 		// Escape and quit simulation.
@@ -260,19 +292,15 @@ public class Application implements Runnable {
 		car.render(g);
 
 		if (pause) {
+			Font b = g.getFont();
+			Font f = b.deriveFont(24.0f);
+			g.setFont(f);
 			g.setColor(Color.WHITE);
-			g.drawString("Pause", 300, 200);
-
+			g.drawString("Pause", 300, 230);
+			g.setFont(b);
 		}
 		if (debug) {
-			g.setColor(Color.GREEN);
-			g.drawString(String.format("dt:(%02f)", elapsed), car.position.x + car.size.width + 4, car.position.y - 4);
-			g.drawString(String.format("car:{p: %s,", car.position), car.position.x + car.size.width + 4,
-					car.position.y - 16);
-			g.drawString(String.format("v: %s,", car.velocity), car.position.x + car.size.width + 4,
-					car.position.y - 28);
-			g.drawString(String.format("a: %s}", car.acceleration), car.position.x + car.size.width + 4,
-					car.position.y - 40);
+			DebugHelper.showEntityInfo(g,car);
 
 		}
 		g.setColor(Color.GRAY);
@@ -280,6 +308,7 @@ public class Application implements Runnable {
 		gScreen.drawImage(buff, 0, 0, null);
 	}
 
+	
 	/**
 	 * Start the simulation.
 	 * 
