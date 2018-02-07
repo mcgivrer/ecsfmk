@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.ge.prototype.ecpfmk.io.InputHandler;
 import com.ge.prototype.ecpfmk.math.Vector2D;
 import com.ge.prototype.ecpfmk.ui.DebugHelper;
+import com.ge.prototype.ecpfmk.ui.Messages;
 
 /**
  * The main application class to animate the simulation.
@@ -88,7 +89,7 @@ public class Application implements Runnable {
 
 		frame.addKeyListener(ih);
 		frame.setAlwaysOnTop(true);
-		frame.setUndecorated(true);
+		frame.setUndecorated(false);
 
 		frame.pack();
 		frame.setVisible(true);
@@ -148,7 +149,7 @@ public class Application implements Runnable {
 	private void initialize() {
 		World world = new World(new Vector2D(0.0f, 98.1f));
 		car = new Car("myCar").setWorld(world).setVelocity(new Vector2D(0.0f, 0.0f))
-				.setPosition(new Vector2D(320.0f, 240.0f)).setSize(new Rectangle(50, 20));
+				.setPosition(new Vector2D(dim.width / 2, dim.height / 2)).setSize(new Rectangle(50, 20));
 	}
 
 	/**
@@ -222,8 +223,8 @@ public class Application implements Runnable {
 			car.acceleration.y = 0.0f;
 			car.velocity.x = 0.0f;
 			car.velocity.y = 0.0f;
-			car.position.x = 320.0f;
-			car.position.y = 240.0f;
+			car.position.x = dim.width / 2;
+			car.position.y = dim.height / 2;
 		}
 
 		// Switch debug display mode.
@@ -285,24 +286,39 @@ public class Application implements Runnable {
 	 */
 	public void render(Graphics2D g, float dt) {
 		g.setBackground(Color.BLACK);
-		g.clearRect(0, 0, 640, 480);
+		g.clearRect(0, 0, dim.width, dim.height);
 		car.render(g);
 
 		if (pause) {
-			Font b = g.getFont();
-			Font f = b.deriveFont(24.0f);
-			g.setFont(f);
-			g.setColor(Color.WHITE);
-			g.drawString("Pause", 300, 230);
-			g.setFont(b);
+			displayPause(g);
 		}
 		if (debug) {
 			DebugHelper.showEntityInfo(g, car);
 
 		}
 		g.setColor(Color.GRAY);
-		g.drawRect(0, 0, 640 - 1, 480 - 1);
+		g.drawRect(0, 0, dim.width - 1, dim.height - 1);
 		gScreen.drawImage(buff, 0, 0, null);
+	}
+
+	/**
+	 * @param g
+	 */
+	private void displayPause(Graphics2D g) {
+		String txtPause = Messages.get("main.pause.label");
+
+		Font b = g.getFont();
+		Font f = b.deriveFont(24.0f);
+
+		g.setFont(f);
+		g.setColor(Color.WHITE);
+
+		int fontHeight = g.getFontMetrics().getHeight();
+		int txtWidth = g.getFontMetrics().stringWidth(txtPause);
+
+		g.drawString(txtPause, (dim.width - txtWidth) / 2, (dim.height - fontHeight) / 2);
+
+		g.setFont(b);
 	}
 
 	/**
@@ -311,7 +327,7 @@ public class Application implements Runnable {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Car Simulation");
+		JFrame frame = new JFrame(Messages.get("main.title"));
 		Application app = new Application(frame);
 
 		app.run();
