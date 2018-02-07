@@ -4,7 +4,7 @@
  *
  * @copyright 2018
  */
-package com.ge.prototype.ecpfmk;
+package com.ge.prototype.ecpfmk.systems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,10 @@ import com.ge.prototype.ecpfmk.math.Vector2D;
  */
 public class World {
 
+	// list of forces (like wind, river flow, etc...) for this world.
 	public List<Vector2D> forces = new ArrayList<Vector2D>();
+
+	// default Earth gravity can be changed accordingly to your needs.
 	public Vector2D gravity = new Vector2D(0, 98.1f);
 
 	/**
@@ -30,13 +33,18 @@ public class World {
 		clear();
 	}
 
+	/**
+	 * Initialize the World object with the gravity value.
+	 * 
+	 * @param vGravity
+	 */
 	public World(Vector2D vGravity) {
 		gravity = vGravity;
 		clear();
 	}
 
 	/**
-	 * create the World values but gravity.
+	 * clear all the World values but gravity.
 	 */
 	public void clear() {
 		forces.clear();

@@ -6,6 +6,8 @@
  */
 package com.ge.prototype.ecpfmk.components;
 
+import java.awt.Color;
+
 /**
  * Rendering component with some specific attributes.
  * 
@@ -13,6 +15,10 @@ package com.ge.prototype.ecpfmk.components;
  *
  */
 public class RenderComponent implements Component {
+
+	
+	// Rendering Attributes
+	public Color color = Color.GRAY;
 
 	/**
 	 * 

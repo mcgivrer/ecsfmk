@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ge.healthcare.dose.prototypes</groupId>
 	<artifactId>ecpfmk</artifactId>
-	<version>1.0.0.0</version>
+	<version>1.0.0.2</version>
 	<name>Entity Component System framework</name>
 	<description>This project intends to provide a sample implmeentation of a Distributed data entity processing system.</description>
 	<inceptionYear>2018</inceptionYear>
