@@ -1,30 +1,255 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ge.healthcare.dose.prototypes</groupId>
-  <artifactId>ecpfmk</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Entity Component System framework</name>
-  <description>This project intends to provide a sample implmeentation of a Distributed data entity processing system.</description>
-  <inceptionYear>2018</inceptionYear>
-  <organization>
-  	<name>GE Healthcare DoseWatch</name>
-  	<url>http://www3.gehealthcare.com/en/products/dose_management</url>
-  </organization>
-  <scm>
-  	<url>https://github.build.ge.com/212391884/ecpfmk</url>
-  	<connection>scm:git:https://github.build.ge.com/212391884/ecpfmk.git</connection>
-  	<developerConnection>scm:git:https://github.build.ge.com/212391884/ecpfmk.git</developerConnection>
-  	<tag>${project.version}</tag>
-  </scm>
-  <issueManagement>
-  	<url>https://github.build.ge.com/212391884/ecpfmk/issues</url>
-  	<system>Github Issues</system>
-  </issueManagement>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.slf4j</groupId>
-  		<artifactId>slf4j-simple</artifactId>
-  		<version>1.7.25</version>
-  	</dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ge.healthcare.dose.prototypes</groupId>
+	<artifactId>ecpfmk</artifactId>
+	<version>1.0.0.0</version>
+	<name>Entity Component System framework</name>
+	<description>This project intends to provide a sample implmeentation of a Distributed data entity processing system.</description>
+	<inceptionYear>2018</inceptionYear>
+	<organization>
+		<name>GE Healthcare DoseWatch</name>
+		<url>http://www3.gehealthcare.com/en/products/dose_management</url>
+	</organization>
+	<scm>
+		<url>https://github.build.ge.com/212391884/ecpfmk</url>
+		<connection>scm:git:https://github.build.ge.com/212391884/ecpfmk.git</connection>
+		<developerConnection>scm:git:https://github.build.ge.com/212391884/ecpfmk.git</developerConnection>
+		<tag>${project.version}</tag>
+	</scm>
+	<issueManagement>
+		<url>https://github.build.ge.com/212391884/ecpfmk/issues</url>
+		<system>Github Issues</system>
+	</issueManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+	</dependencies>
+
+	<properties>
+		<project.exec.name>ecpfmk</project.exec.name>
+		<mainClass>com.ge.prototype.ecpfmk.Application</mainClass>
+	</properties>
+
+	<contributors>
+		<contributor>
+			<name>Frédéric Delorme</name>
+			<email>frederic.delorme@ge.com</email>
+			<organization>GE Healthcare Dose</organization>
+			<organizationUrl>https://confluence-dose.cloud.health.ge.com/display/ARB/DoseWatch+ARB</organizationUrl>
+			<timezone>Europe/Paris</timezone>
+			<roles>
+				<role>Administrator</role>
+				<role>Architect</role>
+			</roles>
+		</contributor>
+	</contributors>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<!-- http://maven.apache.org/plugins/maven-compiler-plugin/ -->
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>utf-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- Build the minimalist JAR without dependencies (Normal Edition) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>${mainClass}</mainClass>
+						</manifest>
+					</archive>
+					<encoding>utf-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- Package a jar with Sources -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<configuration>
+					<enconding>utf-8</enconding>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Prepare Javadoc with a specific Markdown docklet -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<enconding>utf-8</enconding>
+					<stylesheet>maven</stylesheet>
+					<overview>${project.basedir}/README.md</overview>
+					<doclet>ch.raffael.doclets.pegdown.PegdownDoclet</doclet>
+					<docletArtifact>
+						<groupId>ch.raffael.pegdown-doclet</groupId>
+						<artifactId>pegdown-doclet</artifactId>
+						<version>1.1</version>
+					</docletArtifact>
+					<useStandardDocletOptions>true</useStandardDocletOptions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Package a One full of dependencies JAR (Buffed Edition) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>${mainClass}</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-my-jar-with-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- run class from maven -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>${mainClass}</mainClass>
+					<arguments>
+						<!-- to be soon interpreted by a CLI impl. -->
+						<argument>-d=1</argument>
+						<argument>-w=320</argument>
+						<argument>-h=240</argument>
+						<argument>-s=2</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+
+			<!-- Build executable from jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<!-- put your configurations here -->
+					<shadedArtifactAttached>true</shadedArtifactAttached>
+					<shadedClassifierName>shaded</shadedClassifierName>
+					<transformers>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+							<mainClass>${mainClass}</mainClass>
+						</transformer>
+						<!--transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer"> 
+							<resource>src/main/resources/res</resource> <file>options.properties</file> 
+							</transformer -->
+					</transformers>
+					<!-- end of config -->
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- create a Windows EXE -->
+			<!-- https://[[repo_git_hostname]]/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc -->
+			<!-- see http://launch4j.sourceforge.net/ -->
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>1.7.21</version>
+				<executions>
+					<execution>
+						<id>l4j-clui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>gui</headerType>
+							<jar>${project.build.directory}/${artifactId}-${version}-shaded.jar</jar>
+							<outfile>${project.build.directory}/${project.exec.name}.exe</outfile>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<classPath>
+								<mainClass>${mainClass}</mainClass>
+								<preCp>anything</preCp>
+							</classPath>
+							<icon>src/main/resources/icons/ecpfmk-sample.ico</icon>
+							<jre>
+								<minVersion>1.8.0</minVersion>
+								<jdkPreference>preferJre</jdkPreference>
+							</jre>
+							<versionInfo>
+								<fileVersion>${project.version}</fileVersion>
+								<txtFileVersion>${project.version}</txtFileVersion>
+								<fileDescription>${project.name}</fileDescription>
+								<copyright>${project.inceptionYear} ${project.organization.name}</copyright>
+								<productVersion>${project.version}</productVersion>
+								<txtProductVersion>${project.version}</txtProductVersion>
+								<productName>${project.name}</productName>
+								<companyName>${project.organization.name}</companyName>
+								<internalName>${project.name}</internalName>
+								<originalFilename>${project.exec.name}.exe</originalFilename>
+							</versionInfo>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+		</plugins>
+	</build>
 </project>
