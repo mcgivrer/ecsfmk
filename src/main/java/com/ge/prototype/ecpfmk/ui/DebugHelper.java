@@ -10,7 +10,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.ge.prototype.ecpfmk.Car;
+import com.ge.prototype.ecpfmk.entities.Entity;
 import com.ge.prototype.ecpfmk.math.Vector2D;
 
 /**
@@ -32,7 +32,7 @@ public class DebugHelper {
 	 * @param g
 	 * @param car
 	 */
-	public static void showEntityInfo(Graphics2D g, Car car) {
+	public static void showEntityInfo(Graphics2D g, Entity car) {
 		g.setColor(Color.YELLOW);
 		g.drawString(String.format("name: %s,", car.name), car.position.x + car.size.width + 4, car.position.y - 40);
 		g.drawString(String.format("p: %s,", car.position), car.position.x + car.size.width + 4, car.position.y - 28);

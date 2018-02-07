@@ -5,17 +5,21 @@
  *
  * @copyright 2018
  */
-package com.ge.prototype.ecpfmk;
+package com.ge.prototype.ecpfmk.entities;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ge.prototype.ecpfmk.World;
+import com.ge.prototype.ecpfmk.components.Component;
 import com.ge.prototype.ecpfmk.math.Vector2D;
 
 /**
@@ -24,36 +28,37 @@ import com.ge.prototype.ecpfmk.math.Vector2D;
  * @author Frédéric Delorme<frederic.delorme@ge.com>
  *
  */
-public class Car {
-
-	private static final Logger logger = LoggerFactory.getLogger(Car.class);
-
+public class Entity {
+	// Entity Name
 	public String name;
-	public World world;
+	// Entity (becoming)Components
+	Map<String, Component> components = new ConcurrentHashMap<>();
 
-	public List<Vector2D> forces = new ArrayList<Vector2D>();
-
-	public Vector2D acceleration = new Vector2D(0.0f, 0.0f);
-	public Vector2D velocity = new Vector2D(0.0f, 0.0f);
+	// Position Attributes
 	public Vector2D position = new Vector2D(0.0f, 0.0f);
 	public Rectangle size = new Rectangle();
-	public float mass = 1300.0f;
-	public float resistance = 0.89f;
-	public float elasticity = 0.22f;
 
-	public float stopTreshold = 0.20f;
-
+	// Physic Constants
 	public static final float CAR_ACCEL_X = 100.0f;
 	public static final float CAR_ACCEL_Y = 300.0f;
 	public static final float CAR_MAX_SPEED = 1000.0f;
+	// Physic Attributes
+	public World world;
+	public Vector2D acceleration = new Vector2D(0.0f, 0.0f);
+	public Vector2D velocity = new Vector2D(0.0f, 0.0f);
+	public List<Vector2D> forces = new ArrayList<Vector2D>();
+	public float mass = 1300.0f;
+	public float resistance = 0.89f;
+	public float elasticity = 0.22f;
+	public float stopTreshold = 0.20f;
 
+	// Rendering Attributes
 	public Color color = Color.GRAY;
-	
-	
+
 	/**
 	 * Default constructor to create a new Car.
 	 */
-	public Car(String name) {
+	public Entity(String name) {
 		this.name = name;
 	}
 
@@ -64,7 +69,7 @@ public class Car {
 	 * @param position
 	 * @param size
 	 */
-	public Car() {
+	public Entity() {
 		super();
 	}
 
@@ -109,7 +114,7 @@ public class Car {
 	 * @param velocity
 	 *            the velocity to set
 	 */
-	public Car setVelocity(Vector2D velocity) {
+	public Entity setVelocity(Vector2D velocity) {
 		this.velocity = velocity;
 		return this;
 	}
@@ -118,7 +123,7 @@ public class Car {
 	 * @param position
 	 *            the position to set
 	 */
-	public Car setPosition(Vector2D position) {
+	public Entity setPosition(Vector2D position) {
 		this.position = position;
 		return this;
 	}
@@ -127,7 +132,7 @@ public class Car {
 	 * @param resistance
 	 *            the resistance to set
 	 */
-	public Car setResistance(float resistance) {
+	public Entity setResistance(float resistance) {
 		this.resistance = resistance;
 		return this;
 	}
@@ -136,7 +141,7 @@ public class Car {
 	 * @param size
 	 *            the size to set
 	 */
-	public Car setSize(Rectangle size) {
+	public Entity setSize(Rectangle size) {
 		this.size = size;
 		return this;
 	}
@@ -147,7 +152,7 @@ public class Car {
 	 * @param world
 	 * @return
 	 */
-	public Car setWorld(World world) {
+	public Entity setWorld(World world) {
 		this.world = world;
 		return this;
 	}
@@ -163,7 +168,7 @@ public class Car {
 	 * @param acceleration
 	 *            the acceleration to set
 	 */
-	public Car setAcceleration(Vector2D acceleration) {
+	public Entity setAcceleration(Vector2D acceleration) {
 		this.acceleration = acceleration;
 		return this;
 	}
@@ -172,7 +177,7 @@ public class Car {
 	 * @param mass
 	 *            the mass to set
 	 */
-	public Car setMass(float mass) {
+	public Entity setMass(float mass) {
 		this.mass = mass;
 		return this;
 	}
