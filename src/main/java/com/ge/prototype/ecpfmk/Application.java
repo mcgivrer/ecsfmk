@@ -11,10 +11,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-
-import javax.swing.JFrame;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import com.ge.prototype.ecpfmk.io.InputHandler;
 import com.ge.prototype.ecpfmk.math.Vector2D;
 import com.ge.prototype.ecpfmk.ui.DebugHelper;
 import com.ge.prototype.ecpfmk.ui.Messages;
+import com.ge.prototype.ecpfmk.ui.Window;
 
 /**
  * The main application class to animate the simulation.
@@ -49,15 +49,6 @@ public class Application implements Runnable {
 	private boolean debug = true;
 
 	/**
-	 * input keyboard handler.
-	 */
-	private InputHandler ih;
-
-	/**
-	 * rendering frame (Java)
-	 */
-	private JFrame frame = null;
-	/**
 	 * let's play with a buffered rendering.
 	 */
 	private BufferedImage buff;
@@ -67,38 +58,24 @@ public class Application implements Runnable {
 	 * screen.
 	 */
 	private Graphics2D g;
-	private Graphics2D gScreen;
 
 	private Car car = null;
 
-	Dimension dim = new Dimension(640, 480);
+	private Window win = null;
+
+	// private Dimension dim;
 
 	private float elapsed = 0.0f;
 
 	/**
 	 * initialize simulation application.
 	 */
-	public Application(JFrame frame) {
-		this.frame = frame;
-		this.ih = new InputHandler();
-		frame.setPreferredSize(dim);
-		frame.setSize(dim);
-		frame.setMaximumSize(dim);
-		frame.setMinimumSize(dim);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		frame.addKeyListener(ih);
-		frame.setAlwaysOnTop(true);
-		frame.setUndecorated(false);
-
-		frame.pack();
-		frame.setVisible(true);
-
-		this.gScreen = (Graphics2D) frame.getGraphics();
-
-		buff = new BufferedImage((int) dim.getWidth(), (int) dim.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	public Application() {
+		win = new Window(Messages.get("main.title"), new Dimension(640, 480));
+		buff = new BufferedImage(win.getWidth(), win.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		this.g = (Graphics2D) buff.createGraphics();
-
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
 	/**
@@ -112,7 +89,7 @@ public class Application implements Runnable {
 		while (!exit) {
 			currentTime = System.nanoTime();
 			dt = Math.max((currentTime - previousTime) / 1000000.0f, 20.0f);
-			input(ih);
+			input(win.getInputHandler());
 			if (!pause) {
 				update(dt);
 			}
@@ -149,7 +126,7 @@ public class Application implements Runnable {
 	private void initialize() {
 		World world = new World(new Vector2D(0.0f, 98.1f));
 		car = new Car("myCar").setWorld(world).setVelocity(new Vector2D(0.0f, 0.0f))
-				.setPosition(new Vector2D(dim.width / 2, dim.height / 2)).setSize(new Rectangle(50, 20));
+				.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2)).setSize(new Rectangle(50, 20));
 	}
 
 	/**
@@ -157,8 +134,7 @@ public class Application implements Runnable {
 	 */
 	private void dispose() {
 		car = null;
-		ih = null;
-		frame.dispose();
+		win.dispose();
 	}
 
 	/**
@@ -223,8 +199,8 @@ public class Application implements Runnable {
 			car.acceleration.y = 0.0f;
 			car.velocity.x = 0.0f;
 			car.velocity.y = 0.0f;
-			car.position.x = dim.width / 2;
-			car.position.y = dim.height / 2;
+			car.position.x = win.getWidth() / 2;
+			car.position.y = win.getHeight() / 2;
 		}
 
 		// Switch debug display mode.
@@ -249,7 +225,7 @@ public class Application implements Runnable {
 	 */
 	public void update(float dt) {
 		car.update(dt);
-		keepConstrainedTo(car, dim);
+		keepConstrainedTo(car, win.getDimension());
 	}
 
 	/**
@@ -286,7 +262,7 @@ public class Application implements Runnable {
 	 */
 	public void render(Graphics2D g, float dt) {
 		g.setBackground(Color.BLACK);
-		g.clearRect(0, 0, dim.width, dim.height);
+		g.clearRect(0, 0, win.getWidth(), win.getHeight());
 		car.render(g);
 
 		if (pause) {
@@ -297,8 +273,8 @@ public class Application implements Runnable {
 
 		}
 		g.setColor(Color.GRAY);
-		g.drawRect(0, 0, dim.width - 1, dim.height - 1);
-		gScreen.drawImage(buff, 0, 0, null);
+		g.drawRect(0, 0, win.getWidth() - 1, win.getHeight() - 1);
+		win.getGraphics().drawImage(buff, 0, 0, null);
 	}
 
 	/**
@@ -316,7 +292,7 @@ public class Application implements Runnable {
 		int fontHeight = g.getFontMetrics().getHeight();
 		int txtWidth = g.getFontMetrics().stringWidth(txtPause);
 
-		g.drawString(txtPause, (dim.width - txtWidth) / 2, (dim.height - fontHeight) / 2);
+		g.drawString(txtPause, (win.getWidth() - txtWidth) / 2, (win.getHeight() - fontHeight) / 2);
 
 		g.setFont(b);
 	}
@@ -327,9 +303,8 @@ public class Application implements Runnable {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JFrame frame = new JFrame(Messages.get("main.title"));
-		Application app = new Application(frame);
 
+		Application app = new Application();
 		app.run();
 
 	}
