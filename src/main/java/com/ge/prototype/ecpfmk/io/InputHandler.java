@@ -20,16 +20,27 @@ import java.awt.event.KeyListener;
 public class InputHandler implements KeyListener {
 	public boolean[] keys = new boolean[65536];
 
+	/**
+	 * detect pressed key.
+	 */
+	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		keys[keyCode] = true;
 	}
 
+	/**
+	 * detect released key.
+	 */
+	@Override
 	public void keyReleased(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		keys[keyCode] = false;
 	}
 
+	/**
+	 * detect Typed key
+	 */
 	public void keyTyped(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		keys[keyCode] = true;

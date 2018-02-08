@@ -16,13 +16,6 @@ public class Messages {
 
 	private static ResourceBundle messages = ResourceBundle.getBundle("messages");
 
-	/**
-	 * 
-	 */
-	public Messages() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public static String get(String key) {
 		assert(key!=null && !key.equals(""));
 		if(Messages.messages.containsKey(key)) {
