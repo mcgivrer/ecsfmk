@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ge.prototype.ecpfmk.math.Vector2D;
+import com.ge.prototype.ecpfmk.math.physic.World;
 
 /**
  * A Car class to manage and display a Car :)

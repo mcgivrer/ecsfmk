@@ -4,7 +4,7 @@
  *
  * @copyright 2018
  */
-package com.ge.prototype.ecpfmk;
+package com.ge.prototype.ecpfmk.math.physic;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ge.prototype.ecpfmk.io.InputHandler;
 import com.ge.prototype.ecpfmk.math.Vector2D;
+import com.ge.prototype.ecpfmk.math.physic.World;
 import com.ge.prototype.ecpfmk.ui.DebugHelper;
 import com.ge.prototype.ecpfmk.ui.Messages;
 import com.ge.prototype.ecpfmk.ui.Window;
