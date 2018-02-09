@@ -38,6 +38,8 @@ class Car {
 }
 ```
 
+![src/doc/illustrations/car-class-diragram.png]( src/doc/illustrations/car-class-diragram.png)
+
 ### The Refactored Car entity/component oriented.
 
 #### The car entity
