@@ -1,0 +1,219 @@
+@startuml
+class PositionComponent [[java:com.ge.prototype.ecpfmk.components.PositionComponent]] {
+	+Rectangle size
+	+PositionComponent()
+	+String getName()
+	+PositionComponent setPosition(Vector2D position)
+	+PositionComponent setSize(Rectangle size)
+}
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+}
+PositionComponent --> "1" Vector2D : position
+interface Component [[java:com.ge.prototype.ecpfmk.components.Component]] {
+}
+Component <|.. PositionComponent
+class PhysicComponent [[java:com.ge.prototype.ecpfmk.components.PhysicComponent]] {
+	+{static}float CAR_ACCEL_X
+	+{static}float CAR_ACCEL_Y
+	+{static}float CAR_MAX_SPEED
+	+float mass
+	+float resistance
+	+float elasticity
+	+float stopTreshold
+	+PhysicComponent()
+	+String getName()
+	+PhysicComponent setVelocity(Vector2D velocity)
+	+PhysicComponent setResistance(float resistance)
+	+PhysicComponent setWorld(World world)
+	+PhysicComponent setAcceleration(Vector2D acceleration)
+	+PhysicComponent setMass(float mass)
+}
+class World [[java:com.ge.prototype.ecpfmk.math.physic.World]] {
+}
+PhysicComponent --> "1" World : world
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+}
+PhysicComponent --> "1" Vector2D : acceleration
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+}
+PhysicComponent --> "1" Vector2D : velocity
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+}
+PhysicComponent --> "*" Vector2D : forces
+interface Component [[java:com.ge.prototype.ecpfmk.components.Component]] {
+}
+Component <|.. PhysicComponent
+class DebugHelper [[java:com.ge.prototype.ecpfmk.ui.DebugHelper]] {
+	+{static}void showEntityInfo(Graphics2D g, Car car)
+}
+class Car [[java:com.ge.prototype.ecpfmk.entities.Car]] {
+	+Car()
+	+Car(String name)
+}
+class PositionComponent [[java:com.ge.prototype.ecpfmk.components.PositionComponent]] {
+}
+Car --> "1" PositionComponent : pos
+class PhysicComponent [[java:com.ge.prototype.ecpfmk.components.PhysicComponent]] {
+}
+Car --> "1" PhysicComponent : physic
+class RenderComponent [[java:com.ge.prototype.ecpfmk.components.RenderComponent]] {
+}
+Car --> "1" RenderComponent : render
+class Entity [[java:com.ge.prototype.ecpfmk.entities.Entity]] {
+}
+Entity <|-- Car
+class RenderSystem [[java:com.ge.prototype.ecpfmk.systems.RenderSystem]] {
+	-BufferedImage buff
+	+Graphics2D g
+	+RenderSystem(Application app)
+	+void update(float dt)
+	+void renderCar(Graphics2D g, float dt, Car c)
+	-void displayPause(Graphics2D g)
+}
+class Application [[java:com.ge.prototype.ecpfmk.Application]] {
+}
+RenderSystem --> "1" Application : app
+interface System [[java:com.ge.prototype.ecpfmk.systems.System]] {
+}
+System <|.. RenderSystem
+class CarSystem [[java:com.ge.prototype.ecpfmk.systems.CarSystem]] {
+	+Dimension dimension
+	+CarSystem(Application app, Dimension dim)
+	+void update(float dt)
+	+void keepConstrainedTo(Car c, Dimension dim)
+}
+class Application [[java:com.ge.prototype.ecpfmk.Application]] {
+}
+CarSystem --> "1" Application : app
+interface System [[java:com.ge.prototype.ecpfmk.systems.System]] {
+}
+System <|.. CarSystem
+class InputHandler [[java:com.ge.prototype.ecpfmk.io.InputHandler]] {
+	+boolean[] keys
+	+void keyPressed(KeyEvent e)
+	+void keyReleased(KeyEvent e)
+	+void keyTyped(KeyEvent e)
+}
+interface KeyListener [[java:java.awt.event.KeyListener]] {
+}
+KeyListener <|.. InputHandler
+class Entity [[java:com.ge.prototype.ecpfmk.entities.Entity]] {
+	+String name
+	+Entity(String name)
+	+Entity()
+}
+interface System [[java:com.ge.prototype.ecpfmk.systems.System]] {
+	void update(float dt)
+}
+class Window [[java:com.ge.prototype.ecpfmk.ui.Window]] {
+	-JFrame frame
+	-Dimension dimension
+	-Graphics2D gScreen
+	+Window(String title, Dimension dim)
+	+void addInputHandler(InputHandler ih)
+	-void initializeWindow(String title, Dimension dim)
+	+int getWidth()
+	+int getHeight()
+	+void show()
+	+void hide()
+	+boolean isVisible()
+	+Dimension getDimension()
+	+Graphics2D getGraphics()
+	+void dispose()
+	+InputHandler getInputHandler()
+}
+class InputHandler [[java:com.ge.prototype.ecpfmk.io.InputHandler]] {
+}
+Window --> "1" InputHandler : ih
+class Application [[java:com.ge.prototype.ecpfmk.Application]] {
+	-{static}Logger logger
+	+Map<String,Entity> entities
+	+boolean exit
+	+boolean pause
+	+boolean debug
+	+Application()
+	-void initialize()
+	+void run()
+	-void postRenderOperation()
+	-void waitFPS()
+	-void dispose()
+	+void input(InputHandler ih, float dt)
+	+void update(float dt)
+	+void render(float dt)
+	+{static}void main(String[] args)
+}
+class Car [[java:com.ge.prototype.ecpfmk.entities.Car]] {
+}
+Application --> "1" Car : theCar
+class Window [[java:com.ge.prototype.ecpfmk.ui.Window]] {
+}
+Application --> "1" Window : win
+class CarSystem [[java:com.ge.prototype.ecpfmk.systems.CarSystem]] {
+}
+Application --> "1" CarSystem : carSystem
+class RenderSystem [[java:com.ge.prototype.ecpfmk.systems.RenderSystem]] {
+}
+Application --> "1" RenderSystem : renderSystem
+class InputSystem [[java:com.ge.prototype.ecpfmk.systems.InputSystem]] {
+}
+Application --> "1" InputSystem : inputSystem
+interface Runnable [[java:java.lang.Runnable]] {
+}
+Runnable <|.. Application
+class World [[java:com.ge.prototype.ecpfmk.math.physic.World]] {
+	+World()
+	+World(Vector2D vGravity)
+	+void clear()
+}
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+}
+World --> "*" Vector2D : forces
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+}
+World --> "1" Vector2D : gravity
+class InputSystem [[java:com.ge.prototype.ecpfmk.systems.InputSystem]] {
+	-{static}Logger logger
+	+InputSystem(Application app, InputHandler ih)
+	+void update(float dt)
+}
+class Application [[java:com.ge.prototype.ecpfmk.Application]] {
+}
+InputSystem --> "1" Application : app
+class InputHandler [[java:com.ge.prototype.ecpfmk.io.InputHandler]] {
+}
+InputSystem --> "1" InputHandler : ih
+interface System [[java:com.ge.prototype.ecpfmk.systems.System]] {
+}
+System <|.. InputSystem
+interface Component [[java:com.ge.prototype.ecpfmk.components.Component]] {
+	String getName()
+}
+class Vector2D [[java:com.ge.prototype.ecpfmk.math.Vector2D]] {
+	+{static}Vector2D ZERO
+	+{static}Vector2D IDENTITY
+	+float x
+	+float y
+	+Vector2D()
+	+Vector2D(float x, float y)
+	+float distance(Vector2D v)
+	+Vector2D normalize()
+	+Vector2D add(Vector2D v)
+	+Vector2D multiply(float factor)
+	+String toString()
+	+Vector2D substract(Vector2D v)
+	+double dot(Vector2D v1)
+}
+class Messages [[java:com.ge.prototype.ecpfmk.ui.Messages]] {
+	-{static}ResourceBundle messages
+	+{static}String get(String key)
+}
+class RenderComponent [[java:com.ge.prototype.ecpfmk.components.RenderComponent]] {
+	+Color color
+	+RenderComponent()
+	+String getName()
+}
+interface Component [[java:com.ge.prototype.ecpfmk.components.Component]] {
+}
+Component <|.. RenderComponent
+
+@enduml

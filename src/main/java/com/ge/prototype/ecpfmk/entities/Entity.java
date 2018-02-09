@@ -7,6 +7,11 @@
  */
 package com.ge.prototype.ecpfmk.entities;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.ge.prototype.ecpfmk.components.Component;
+
 /**
  * A Car class to manage and display a Car :)
  * 
@@ -16,7 +21,7 @@ package com.ge.prototype.ecpfmk.entities;
 public class Entity {
 	// Entity Name
 	public String name;
-
+	
 	/**
 	 * A new constructor to build car with all its attributes values.
 	 */

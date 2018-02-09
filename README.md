@@ -12,14 +12,14 @@ way some entities, their living attributes and the System running all those stuf
 
 This is a Static implementation.
 
-A dynamic implementation (meaning usage of component containers into Entity, will come 
-soon).
+A dynamic implementation (meaning usage of component containers into Entity, will 
+come soon).
 
 
 ## Sample code
 
-Checkout the tag 1.0.0.0 will provide a simple implmentation of a common java object with 
-some attributes and a main process using it. 
+Checkout the tag 1.0.0.0 will provide a simple implmentation of a common java object 
+with some attributes and a main process using it. 
 
 ### The game object.
 
@@ -42,10 +42,23 @@ class Car {
 
 #### The car entity
 
+This is the basic entity to be inherited by business entity.
+```Java
+class Entity {
+    String name;
+
+    public Entity(String name){...}
+    public String getName(){...}
+
+}
+```
+
+The implemented Car entity
 ```Java
 class Car extends Entity{
     PositionComponent pos;
     PhysicComponent physic;
+    RenderComponent render;
 }
 ```
 
