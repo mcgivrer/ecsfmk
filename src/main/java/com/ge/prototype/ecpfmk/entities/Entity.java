@@ -7,11 +7,6 @@
  */
 package com.ge.prototype.ecpfmk.entities;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.ge.prototype.ecpfmk.components.Component;
-
 /**
  * A Car class to manage and display a Car :)
  * 

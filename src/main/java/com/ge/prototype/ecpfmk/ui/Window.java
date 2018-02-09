@@ -63,6 +63,7 @@ public class Window {
 		frame.setSize(dim);
 		frame.setMaximumSize(dim);
 		frame.setMinimumSize(dim);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		if (ih == null) {
 			ih = new InputHandler();

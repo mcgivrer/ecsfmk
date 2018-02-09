@@ -77,9 +77,13 @@ public class Application implements Runnable {
 		World world = new World(new Vector2D(0.0f, 98.1f));
 		theCar = new Car("car");
 
-		theCar.physic.setWorld(world).setVelocity(new Vector2D(0.0f, 0.0f));
+		theCar.physic
+			.setWorld(world)
+			.setVelocity(new Vector2D(0.0f, 0.0f));
 
-		theCar.pos.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2)).setSize(new Rectangle(50, 20));
+		theCar.pos
+			.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2))
+			.setSize(new Rectangle(50, 20));
 
 		entities.put(theCar.name, theCar);
 	}

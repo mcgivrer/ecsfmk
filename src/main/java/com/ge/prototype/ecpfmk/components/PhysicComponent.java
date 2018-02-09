@@ -20,14 +20,17 @@ import com.ge.prototype.ecpfmk.math.physic.World;
  */
 public class PhysicComponent implements Component {
 
-	public static final float CAR_ACCEL_X = 100.0f;
-	public static final float CAR_ACCEL_Y = 300.0f;
-	public static final float CAR_MAX_SPEED = 1000.0f;
-	// Physic Attributes
+	// World Physic reference
 	public World world;
+	// Acceleration
 	public Vector2D acceleration = new Vector2D(0.0f, 0.0f);
+	// Velocity
 	public Vector2D velocity = new Vector2D(0.0f, 0.0f);
+
+	// Physic Attributes
 	public List<Vector2D> forces = new ArrayList<Vector2D>();
+	public Vector2D defaultAccel = new Vector2D(100.0f, 300.0f);
+	public Vector2D defaultMaxSpeedAccel = new Vector2D(1000.0f, 1000.0f);
 	public float mass = 1300.0f;
 	public float resistance = 0.89f;
 	public float elasticity = 0.22f;
@@ -37,6 +40,20 @@ public class PhysicComponent implements Component {
 	 * Build this fantastic component.
 	 */
 	public PhysicComponent() {
+	}
+
+	/**
+	 * Initialize the component with some default values:
+	 * 
+	 * * `maxSpeed` is the maximum speed threshold to stabilize the velocity
+	 * * `defaultAcceleration` is the acceleration to use when thrust up the object.
+	 * 
+	 * @param maxSpeed
+	 * @param defaultAcceleration
+	 */
+	public PhysicComponent(Vector2D maxSpeed, Vector2D defaultAcceleration) {
+		this.defaultMaxSpeedAccel = maxSpeed;
+		this.defaultAccel = defaultAcceleration;
 	}
 
 	/*

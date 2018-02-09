@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ge.prototype.ecpfmk.Application;
 import com.ge.prototype.ecpfmk.entities.Car;
-import com.ge.prototype.ecpfmk.entities.Entity;
 import com.ge.prototype.ecpfmk.io.InputHandler;
 import com.ge.prototype.ecpfmk.math.Vector2D;
 
@@ -50,24 +49,24 @@ public class InputSystem implements System {
 	public void update(float dt) {
 		Car c = (Car) app.entities.get("car");
 
-		if (ih.keys[KeyEvent.VK_LEFT] && Math.abs(c.physic.velocity.x) < c.physic.CAR_MAX_SPEED) {
-			Vector2D moveLeft = new Vector2D(-c.physic.CAR_ACCEL_X, 0.0f);
+		if (ih.keys[KeyEvent.VK_LEFT] && Math.abs(c.physic.velocity.x) < c.physic.defaultMaxSpeedAccel.x) {
+			Vector2D moveLeft = new Vector2D(-c.physic.defaultAccel.x, 0.0f);
 			c.physic.forces.add(moveLeft);
 			logger.debug("add left move by {}", moveLeft);
 		}
 		// break !
-		if (ih.keys[KeyEvent.VK_RIGHT] && Math.abs(c.physic.velocity.x) < c.physic.CAR_MAX_SPEED) {
-			Vector2D moveRight = new Vector2D(c.physic.CAR_ACCEL_X, 0.0f);
+		if (ih.keys[KeyEvent.VK_RIGHT] && Math.abs(c.physic.velocity.x) < c.physic.defaultMaxSpeedAccel.x) {
+			Vector2D moveRight = new Vector2D(c.physic.defaultAccel.x, 0.0f);
 			c.physic.forces.add(moveRight);
 			logger.debug("add right move by {}", moveRight);
 		}
 		// Stop !
-		if (ih.keys[KeyEvent.VK_SPACE] && Math.abs(c.physic.velocity.x) < c.physic.CAR_MAX_SPEED) {
+		if (ih.keys[KeyEvent.VK_SPACE] && Math.abs(c.physic.velocity.x) < c.physic.defaultMaxSpeedAccel.x) {
 			if (c.physic.velocity.x != 0.0f) {
 				if (c.physic.velocity.x > c.physic.stopTreshold) {
-					c.physic.forces.add(new Vector2D(-c.physic.CAR_ACCEL_X * 4, 0.0f));
+					c.physic.forces.add(new Vector2D(-c.physic.defaultAccel.x * 4, 0.0f));
 				} else if (c.physic.velocity.x < -c.physic.stopTreshold) {
-					c.physic.forces.add(new Vector2D(c.physic.CAR_ACCEL_X * 4, 0.0f));
+					c.physic.forces.add(new Vector2D(c.physic.defaultAccel.x * 4, 0.0f));
 				} else {
 					c.physic.velocity.x = 0.0f;
 					c.physic.acceleration.x = 0.0f;
@@ -75,9 +74,9 @@ public class InputSystem implements System {
 			}
 			if (c.physic.velocity.y != 0.0f) {
 				if (c.physic.velocity.y > c.physic.stopTreshold) {
-					c.physic.forces.add(new Vector2D(0.0f, -c.physic.CAR_ACCEL_X * 4));
+					c.physic.forces.add(new Vector2D(0.0f, -c.physic.defaultAccel.y * 4));
 				} else if (c.physic.velocity.y < -c.physic.stopTreshold) {
-					c.physic.forces.add(new Vector2D(0.0f, c.physic.CAR_ACCEL_X * 4));
+					c.physic.forces.add(new Vector2D(0.0f, c.physic.defaultAccel.y * 4));
 				} else {
 					c.physic.velocity.y = 0.0f;
 					c.physic.acceleration.y = 0.0f;
@@ -86,14 +85,14 @@ public class InputSystem implements System {
 			logger.debug("request break");
 		}
 		// up !
-		if (ih.keys[KeyEvent.VK_UP] && Math.abs(c.physic.velocity.y) < c.physic.CAR_MAX_SPEED) {
-			Vector2D moveUp = new Vector2D(0.0f, -c.physic.CAR_ACCEL_Y);
+		if (ih.keys[KeyEvent.VK_UP] && Math.abs(c.physic.velocity.y) < c.physic.defaultMaxSpeedAccel.y) {
+			Vector2D moveUp = new Vector2D(0.0f, -c.physic.defaultAccel.y);
 			c.physic.forces.add(moveUp);
 			logger.debug("add up move by {}", moveUp);
 		}
 		// nothing to do today.
-		if (ih.keys[KeyEvent.VK_DOWN] && Math.abs(c.physic.velocity.y) < c.physic.CAR_MAX_SPEED) {
-			Vector2D moveDown = new Vector2D(0.0f, c.physic.CAR_ACCEL_Y);
+		if (ih.keys[KeyEvent.VK_DOWN] && Math.abs(c.physic.velocity.y) < c.physic.defaultMaxSpeedAccel.x) {
+			Vector2D moveDown = new Vector2D(0.0f, c.physic.defaultAccel.y);
 			c.physic.forces.add(moveDown);
 			logger.debug("add up move by {}", moveDown);
 			c.physic.forces.add(moveDown);

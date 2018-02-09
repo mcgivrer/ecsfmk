@@ -6,10 +6,8 @@
  */
 package com.ge.prototype.ecpfmk.components;
 
-import java.awt.Dimension;
 import java.awt.Rectangle;
 
-import com.ge.prototype.ecpfmk.entities.Entity;
 import com.ge.prototype.ecpfmk.math.Vector2D;
 
 /**
