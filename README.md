@@ -1,6 +1,6 @@
-# ecpfmk
+# ECSfmk
 
-Entity Component Processor framework
+Entity Component System framework
 
 
 ## Introduction
@@ -18,9 +18,9 @@ come soon).
 
 ## Sample code
 
-Checkout the tag 1.0.0.0 will provide a simple implmentation of a common java object 
+Checkout the tag 1.0.0.0 will provide a simple implementation of a common java object 
 with some attributes and a main process using it. 
 
 
 
-[Frédéric Delorme](frederic.delorme@ge.com "contact the author").
+[Frédéric Delorme](frederic.delorme@snapgames.fr "contact the author").

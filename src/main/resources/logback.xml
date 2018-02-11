@@ -9,7 +9,7 @@
 		</layout>
 	</appender>
 
-	<logger name="com.ge.prototype.ecpfmk" level="debug"
+	<logger name="fr.mcgivrer.prototype.ecsfmk" level="debug"
 		additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>

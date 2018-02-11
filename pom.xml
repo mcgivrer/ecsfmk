@@ -1,24 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ge.healthcare.dose.prototypes</groupId>
-	<artifactId>ecpfmk</artifactId>
+	<groupId>fr.mcgivrer.prototype</groupId>
+	<artifactId>ecsfmk</artifactId>
 	<version>1.0.0.2</version>
 	<name>Entity Component System framework</name>
 	<description>This project intends to provide a sample implementation of a Distributed data entity processing system.</description>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
-		<name>GE Healthcare DoseWatch</name>
-		<url>http://www3.gehealthcare.com/en/products/dose_management</url>
+		<name>McGivrer's Blog</name>
+		<url>https://mcgivrer.wordpress.com</url>
 	</organization>
 	<scm>
-		<url>https://github.build.ge.com/212391884/ecpfmk</url>
-		<connection>scm:git:https://github.build.ge.com/212391884/ecpfmk.git</connection>
-		<developerConnection>scm:git:https://github.build.ge.com/212391884/ecpfmk.git</developerConnection>
+		<url>https://github.com/mcgivrer/ecsfmk</url>
+		<connection>scm:git:git@github.com:mcgivrer/ecsfmk.git</connection>
+		<developerConnection>scm:git:git@github.com:mcgivrer/ecsfmk.git</developerConnection>
 		<tag>${project.version}</tag>
 	</scm>
 	<issueManagement>
-		<url>https://github.build.ge.com/212391884/ecpfmk/issues</url>
+		<url>https://github.com/mcgivrer/ecsfmk/issues</url>
 		<system>Github Issues</system>
 	</issueManagement>
 	<dependencies>
@@ -30,20 +30,20 @@
 	</dependencies>
 
 	<properties>
-		<project.exec.name>ecpfmk</project.exec.name>
-		<mainClass>com.ge.prototype.ecpfmk.Application</mainClass>
+		<project.exec.name>ecsfmk</project.exec.name>
+		<mainClass>fr.mcgivrer.prototype.ecsfmk.Application</mainClass>
 	</properties>
 
 	<contributors>
 		<contributor>
 			<name>Frédéric Delorme</name>
-			<email>frederic.delorme@ge.com</email>
-			<organization>GE Healthcare Dose</organization>
-			<organizationUrl>https://confluence-dose.cloud.health.ge.com/display/ARB/DoseWatch+ARB</organizationUrl>
+			<email>frederic.delorme@snapgames.fr</email>
+			<organization>SnapGames</organization>
+			<organizationUrl>https://snapgames.github.io</organizationUrl>
 			<timezone>Europe/Paris</timezone>
 			<roles>
 				<role>Administrator</role>
-				<role>Architect</role>
+				<role>gamedev utopist</role>
 			</roles>
 		</contributor>
 	</contributors>
@@ -252,4 +252,7 @@
 
 		</plugins>
 	</build>
+	<ciManagement>
+		<system>Travis-CI</system>
+	</ciManagement>
 </project>
