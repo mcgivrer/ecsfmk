@@ -15,7 +15,7 @@ class Car {
 }
 ```
 
-![illustrations/car-class-diragram.png](illustrations/car-class-diragram.png 
+![illustrations/car-class-diagram.png](illustrations/car-class-diagram.png 
 'Car UML class diagram')
 
 ### The Refactored Car entity/component oriented.
