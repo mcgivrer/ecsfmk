@@ -254,5 +254,6 @@
 	</build>
 	<ciManagement>
 		<system>Travis-CI</system>
+		<url>https://travis-ci.org/mcgivrer/ecsfmk</url>
 	</ciManagement>
 </project>

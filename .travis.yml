@@ -1,0 +1,10 @@
+#
+# McGivrer's Blog
+# ECS fmk
+#
+language: java
+jdk:
+  - oraclejdk8
+
+#before_install:
+#  - Commands toi execute before install
