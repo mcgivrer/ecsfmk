@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.mcgivrer.prototype</groupId>
 	<artifactId>ecsfmk</artifactId>
-	<version>1.0.0.2</version>
+	<version>1.0.0.0</version>
 	<name>Entity Component System framework</name>
 	<description>This project intends to provide a sample implementation of a Distributed data entity processing system.</description>
 	<inceptionYear>2018</inceptionYear>
