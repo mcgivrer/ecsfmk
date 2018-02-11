@@ -12,6 +12,15 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.imageio.ImageIO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.mcgivrer.prototype.ecsfmk.Application;
 import fr.mcgivrer.prototype.ecsfmk.entities.Car;
@@ -23,6 +32,9 @@ import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
  *
  */
 public class RenderSystem implements System {
+
+	private static final Logger logger = LoggerFactory.getLogger(RenderSystem.class);
+
 	/**
 	 * let's play with a buffered rendering.
 	 */
@@ -69,6 +81,30 @@ public class RenderSystem implements System {
 		g.drawRect(0, 0, app.win.getWidth() - 1, app.win.getHeight() - 1);
 		app.win.getGraphics().drawImage(buff, 0, 0, null);
 
+		if (app.requestScreenshot) {
+			writeScreenshot(app, buff);
+		}
+
+	}
+
+	/**
+	 * Write a screenshot from the current buffer.
+	 * 
+	 * @param app
+	 *            Application attached to.
+	 * @param buff
+	 *            the buffer to be written.
+	 */
+	private void writeScreenshot(Application app, BufferedImage buff) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-hms");
+			String strDate = sdf.format(new Date());
+			File sc = new File(String.format("./screenshot_%s.png", strDate));
+			ImageIO.write(buff, "PNG", sc);
+		} catch (IOException e) {
+			logger.error("unable to write the screenshot", e);
+		}
+		app.requestScreenshot = false;
 	}
 
 	/**

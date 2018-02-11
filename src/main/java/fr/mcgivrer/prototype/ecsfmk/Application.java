@@ -60,6 +60,8 @@ public class Application implements Runnable {
 	private RenderSystem renderSystem;
 	private InputSystem inputSystem;
 
+	public boolean requestScreenshot;
+
 	/**
 	 * initialize simulation application.
 	 */

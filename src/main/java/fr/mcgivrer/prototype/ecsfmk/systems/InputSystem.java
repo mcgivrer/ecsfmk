@@ -99,6 +99,11 @@ public class InputSystem implements System {
 			c.physic.forces.add(moveDown);
 		}
 
+		// request for a screenshot
+		if (ih.keys[KeyEvent.VK_S]) {
+			app.requestScreenshot = true;
+		}
+
 		// reset all
 		if (ih.keys[KeyEvent.VK_DELETE]) {
 			c.physic.acceleration.x = 0.0f;
