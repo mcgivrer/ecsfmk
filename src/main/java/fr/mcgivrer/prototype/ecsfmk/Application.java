@@ -15,13 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.mcgivrer.prototype.ecsfmk.components.PhysicComponent;
+import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
 import fr.mcgivrer.prototype.ecsfmk.entities.Car;
 import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.io.InputHandler;
 import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 import fr.mcgivrer.prototype.ecsfmk.math.physic.World;
-import fr.mcgivrer.prototype.ecsfmk.systems.MoveSystem;
 import fr.mcgivrer.prototype.ecsfmk.systems.InputSystem;
+import fr.mcgivrer.prototype.ecsfmk.systems.MoveSystem;
 import fr.mcgivrer.prototype.ecsfmk.systems.RenderSystem;
 import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
 import fr.mcgivrer.prototype.ecsfmk.ui.Window;
@@ -56,10 +58,13 @@ public class Application implements Runnable {
 
 	public Window win = null;
 
-	private MoveSystem carSystem;
+	private MoveSystem moveSystem;
 	private RenderSystem renderSystem;
 	private InputSystem inputSystem;
 
+	/**
+	 * flag to request a screenshot.
+	 */
 	public boolean requestScreenshot;
 
 	/**
@@ -73,22 +78,33 @@ public class Application implements Runnable {
 	 * Initialize object for this app.
 	 */
 	private void initialize() {
-		carSystem = new MoveSystem(this, win.getDimension());
+		moveSystem = new MoveSystem(this, win.getDimension());
 		renderSystem = new RenderSystem(this);
 		inputSystem = new InputSystem(this, win.getInputHandler());
 
 		World world = new World(new Vector2D(0.0f, 98.1f));
-		theCar = new Car("car");
+		moveSystem.setWorld(world);
 
-		theCar.physic
-			.setWorld(world)
-			.setVelocity(new Vector2D(0.0f, 0.0f));
+		theCar = new Car(world, "car");
+		((PhysicComponent) theCar.getComponent("physic")).setVelocity(new Vector2D(0.0f, 0.0f)).setResistance(0.98f);
 
-		theCar.pos
-			.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2))
-			.setSize(new Rectangle(50, 20));
+		((PositionComponent) theCar.getComponent("position"))
+				.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2)).setSize(new Rectangle(50, 20));
 
-		entities.put(theCar.name, theCar);
+		addEntity(theCar);
+
+		moveSystem.add(theCar);
+		renderSystem.add(theCar);
+	}
+
+	/**
+	 * Add an entity to the Application.
+	 * 
+	 * @param entity
+	 */
+	public void addEntity(Entity entity) {
+		this.entities.put(entity.getName(), entity);
+
 	}
 
 	/**
@@ -107,18 +123,17 @@ public class Application implements Runnable {
 				update(dt);
 			}
 			render(dt);
+			postProcess(dt);
 			waitFPS();
 			previousTime = currentTime;
-			postRenderOperation();
+
 		}
 		dispose();
 	}
 
-	/**
-	 * 
-	 */
-	private void postRenderOperation() {
-		theCar.physic.forces.clear();
+	private void postProcess(float dt) {
+		moveSystem.postProcess(dt);
+
 	}
 
 	/**
@@ -155,7 +170,7 @@ public class Application implements Runnable {
 	 * @param dt
 	 */
 	public void update(float dt) {
-		carSystem.update(dt);
+		moveSystem.update(dt);
 	}
 
 	/**

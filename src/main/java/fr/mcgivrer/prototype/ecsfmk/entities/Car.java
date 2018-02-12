@@ -10,6 +10,7 @@ package fr.mcgivrer.prototype.ecsfmk.entities;
 import fr.mcgivrer.prototype.ecsfmk.components.PhysicComponent;
 import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
 import fr.mcgivrer.prototype.ecsfmk.components.RenderComponent;
+import fr.mcgivrer.prototype.ecsfmk.math.physic.World;
 
 /**
  * A Car with the Entity concept.
@@ -19,17 +20,18 @@ import fr.mcgivrer.prototype.ecsfmk.components.RenderComponent;
  */
 public class Car extends Entity {
 	// Position component to manage car position :)
-	public PositionComponent pos = new PositionComponent();
+	private  PositionComponent pos = new PositionComponent();
 	// Physic component to compute physic about that car.
-	public PhysicComponent physic = new PhysicComponent();
+	private PhysicComponent physic = new PhysicComponent();
 	// an dfinally a rendering component to render tings.
-	public RenderComponent render = new RenderComponent();
+	private  RenderComponent render = new RenderComponent();
 
 	/**
 	 * A default Constructor.
 	 */
-	public Car() {
+	public Car(World world) {
 		super();
+		initialize(world);
 	}
 
 	/**
@@ -37,8 +39,19 @@ public class Car extends Entity {
 	 * 
 	 * @param name
 	 */
-	public Car(String name) {
-		super(name);
+	public Car(World world, String name) {
+		super(world, name);
+		initialize(world);
+	}
+
+	/**
+	 * @param world
+	 */
+	private void initialize(World world) {
+		physic.setWorld(world);
+		addComponent(pos);
+		addComponent(physic);
+		addComponent(render);
 	}
 
 }

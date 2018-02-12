@@ -15,7 +15,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -23,7 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.mcgivrer.prototype.ecsfmk.Application;
-import fr.mcgivrer.prototype.ecsfmk.entities.Car;
+import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
+import fr.mcgivrer.prototype.ecsfmk.components.RenderComponent;
+import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.ui.DebugHelper;
 import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
 
@@ -34,6 +38,8 @@ import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
 public class RenderSystem implements System {
 
 	private static final Logger logger = LoggerFactory.getLogger(RenderSystem.class);
+
+	private List<Entity> renderingStack = new ArrayList<>();
 
 	/**
 	 * let's play with a buffered rendering.
@@ -53,8 +59,7 @@ public class RenderSystem implements System {
 		buff = new BufferedImage(app.win.getWidth(), app.win.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		this.g = (Graphics2D) buff.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		// g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		// RenderingHints.VALUE_ANTIALIAS_ON);
+		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
 	/**
@@ -64,27 +69,37 @@ public class RenderSystem implements System {
 	 * @param dt
 	 */
 	public void update(float dt) {
-		Car theCar = (Car) app.entities.get("car");
+		// Clear display area.
 		g.setBackground(Color.BLACK);
 		g.clearRect(0, 0, app.win.getWidth(), app.win.getHeight());
 
-		renderCar(g, dt, theCar);
+		for (Entity entity : renderingStack) {
 
+			// render an object
+			renderEntity(g, dt, entity);
+
+			if (app.debug) {
+				DebugHelper.showEntityInfo(g, entity);
+			}
+		}
+		// display pause info if needed.
 		if (app.pause) {
 			displayPause(g);
 		}
-		if (app.debug) {
-			DebugHelper.showEntityInfo(g, theCar);
-
-		}
-		g.setColor(Color.GRAY);
-		g.drawRect(0, 0, app.win.getWidth() - 1, app.win.getHeight() - 1);
-		app.win.getGraphics().drawImage(buff, 0, 0, null);
-
+		// draw display area to window
+		drawToScreen();
 		if (app.requestScreenshot) {
 			writeScreenshot(app, buff);
 		}
+	}
 
+	/**
+	 * 
+	 */
+	private void drawToScreen() {
+		g.setColor(Color.GRAY);
+		g.drawRect(0, 0, app.win.getWidth() - 1, app.win.getHeight() - 1);
+		app.win.getGraphics().drawImage(buff, 0, 0, null);
 	}
 
 	/**
@@ -117,9 +132,11 @@ public class RenderSystem implements System {
 	 * @param c
 	 *            the Car to be rendered/animated.
 	 */
-	public void renderCar(Graphics2D g, float dt, Car c) {
-		g.setColor(c.render.color);
-		g.fillRect((int) c.pos.position.x, (int) c.pos.position.y, c.pos.size.width, c.pos.size.height);
+	public void renderEntity(Graphics2D g, float dt, Entity c) {
+		RenderComponent render = (RenderComponent) app.entities.get("car").getComponent("render");
+		PositionComponent pos = (PositionComponent) app.entities.get("car").getComponent("position");
+		g.setColor(render.color);
+		g.fillRect((int) pos.position.x, (int) pos.position.y, pos.size.width, pos.size.height);
 
 	}
 
@@ -144,6 +161,11 @@ public class RenderSystem implements System {
 		g.drawString(txtPause, (app.win.getWidth() - txtWidth) / 2, (app.win.getHeight() - fontHeight) / 2);
 
 		g.setFont(b);
+	}
+
+	@Override
+	public void add(Entity e) {
+		renderingStack.add(e);
 	}
 
 }

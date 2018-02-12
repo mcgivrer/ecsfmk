@@ -7,6 +7,8 @@
  */
 package fr.mcgivrer.prototype.ecsfmk.systems;
 
+import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
+
 /**
  * The interface to create new System.
  * 
@@ -21,4 +23,12 @@ public interface System {
 	 *            elapsed time since previous call.
 	 */
 	public void update(float dt);
+
+	/**
+	 * Add an entity to the scope of this system.
+	 * 
+	 * @param e
+	 */
+	public void add(Entity e);
+
 }

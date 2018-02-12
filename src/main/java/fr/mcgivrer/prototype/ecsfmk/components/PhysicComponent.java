@@ -33,7 +33,7 @@ public class PhysicComponent implements Component {
 	public Vector2D defaultAccel = new Vector2D(100.0f, 300.0f);
 	public Vector2D defaultMaxSpeedAccel = new Vector2D(1000.0f, 1000.0f);
 	public float mass = 1300.0f;
-	public float resistance = 0.89f;
+	public float friction = 0.89f;
 	public float elasticity = 0.22f;
 	public float stopTreshold = 0.20f;
 
@@ -46,8 +46,8 @@ public class PhysicComponent implements Component {
 	/**
 	 * Initialize the component with some default values:
 	 * 
-	 * * `maxSpeed` is the maximum speed threshold to stabilize the velocity
-	 * * `defaultAcceleration` is the acceleration to use when thrust up the object.
+	 * * `maxSpeed` is the maximum speed threshold to stabilize the velocity *
+	 * `defaultAcceleration` is the acceleration to use when thrust up the object.
 	 * 
 	 * @param maxSpeed
 	 * @param defaultAcceleration
@@ -77,11 +77,11 @@ public class PhysicComponent implements Component {
 	}
 
 	/**
-	 * @param resistance
-	 *            the resistance to set
+	 * @param friction
+	 *            the friction to set
 	 */
 	public PhysicComponent setResistance(float resistance) {
-		this.resistance = resistance;
+		this.friction = resistance;
 		return this;
 	}
 
@@ -112,6 +112,13 @@ public class PhysicComponent implements Component {
 	public PhysicComponent setMass(float mass) {
 		this.mass = mass;
 		return this;
+	}
+
+	/**
+	 * remove all applied forces for this component.
+	 */
+	public void clearForces() {
+		forces.clear();
 	}
 
 }
