@@ -221,7 +221,7 @@
 						<configuration>
 							<headerType>gui</headerType>
 							<jar>${project.build.directory}/${artifactId}-${version}-shaded.jar</jar>
-							<outfile>${project.build.directory}/${project.exec.name}.exe</outfile>
+							<outfile>${project.build.directory}/${project.exec.name}-${project.version}.exe</outfile>
 							<downloadUrl>http://java.com/download</downloadUrl>
 							<classPath>
 								<mainClass>${mainClass}</mainClass>
@@ -242,7 +242,7 @@
 								<productName>${project.name}</productName>
 								<companyName>${project.organization.name}</companyName>
 								<internalName>${project.name}</internalName>
-								<originalFilename>${project.exec.name}.exe</originalFilename>
+								<originalFilename>${project.exec.name}-${project.version}.exe</originalFilename>
 							</versionInfo>
 						</configuration>
 					</execution>
