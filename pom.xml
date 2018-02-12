@@ -242,7 +242,7 @@
 								<productName>${project.name}</productName>
 								<companyName>${project.organization.name}</companyName>
 								<internalName>${project.name}</internalName>
-								<originalFilename>${project.exec.name}.exe</originalFilename>
+								<originalFilename>${project.exec.name}-${project.version}.exe</originalFilename>
 							</versionInfo>
 						</configuration>
 					</execution>
