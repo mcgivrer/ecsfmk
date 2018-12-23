@@ -10,7 +10,7 @@ package fr.mcgivrer.prototype.ecsfmk.entities;
 /**
  * A Car class to manage and display a Car :)
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class Entity {

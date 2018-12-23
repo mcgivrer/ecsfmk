@@ -14,7 +14,7 @@ import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 /**
  * This component intends to contain position information.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class PositionComponent implements Component {

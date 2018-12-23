@@ -10,7 +10,7 @@ package fr.mcgivrer.prototype.ecsfmk.components;
 /**
  * The Component to be dispatch into Entities.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public interface Component {

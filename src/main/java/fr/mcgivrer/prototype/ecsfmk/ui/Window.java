@@ -17,7 +17,7 @@ import fr.mcgivrer.prototype.ecsfmk.io.InputHandler;
 /**
  * A Window object to manage windowing stuff and link to OS.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class Window {

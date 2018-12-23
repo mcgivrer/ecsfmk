@@ -17,7 +17,7 @@ import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 /**
  * Utilities used to debug info on display.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class DebugHelper {

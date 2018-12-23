@@ -10,7 +10,7 @@ package fr.mcgivrer.prototype.ecsfmk.ui;
 import java.util.ResourceBundle;
 
 /**
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class Messages {

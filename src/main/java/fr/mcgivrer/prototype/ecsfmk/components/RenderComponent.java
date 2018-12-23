@@ -12,7 +12,7 @@ import java.awt.Color;
 /**
  * Rendering component with some specific attributes.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class RenderComponent implements Component {

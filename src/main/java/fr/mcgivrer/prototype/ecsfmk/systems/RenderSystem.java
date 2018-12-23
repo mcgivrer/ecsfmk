@@ -28,7 +28,7 @@ import fr.mcgivrer.prototype.ecsfmk.ui.DebugHelper;
 import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
 
 /**
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class RenderSystem implements System {

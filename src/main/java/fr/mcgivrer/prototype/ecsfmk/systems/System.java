@@ -10,7 +10,7 @@ package fr.mcgivrer.prototype.ecsfmk.systems;
 /**
  * The interface to create new System.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public interface System {

@@ -13,13 +13,14 @@ import java.awt.event.KeyListener;
 /**
  * A small key input handler to manage key events.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  * 
  * @see https://gist.github.com/jake7864/3212569
  *
  */
 public class InputHandler implements KeyListener {
 	public boolean[] keys = new boolean[65536];
+	public boolean[] prevKeys = new boolean[65536];
 
 	/**
 	 * detect pressed key.
@@ -27,6 +28,7 @@ public class InputHandler implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
+		prevKeys[keyCode] = keys[keyCode];
 		keys[keyCode] = true;
 	}
 
@@ -36,6 +38,7 @@ public class InputHandler implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		int keyCode = e.getKeyCode();
+		prevKeys[keyCode] = keys[keyCode];
 		keys[keyCode] = false;
 	}
 
@@ -44,6 +47,7 @@ public class InputHandler implements KeyListener {
 	 */
 	public void keyTyped(KeyEvent e) {
 		int keyCode = e.getKeyCode();
+		prevKeys[keyCode] = keys[keyCode];
 		keys[keyCode] = true;
 	}
 }

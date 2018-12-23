@@ -16,7 +16,7 @@ import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
  * This class is intend to be the Physic world context to compute everything
  * about physic.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class World {

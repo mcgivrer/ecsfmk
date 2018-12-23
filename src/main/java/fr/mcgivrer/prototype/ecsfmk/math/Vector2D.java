@@ -10,7 +10,7 @@ package fr.mcgivrer.prototype.ecsfmk.math;
 /**
  * Internal Class to manipulate simple Vector2D.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class Vector2D {

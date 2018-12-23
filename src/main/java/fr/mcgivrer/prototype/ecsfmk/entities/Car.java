@@ -14,7 +14,7 @@ import fr.mcgivrer.prototype.ecsfmk.components.RenderComponent;
 /**
  * A Car with the Entity concept.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class Car extends Entity {

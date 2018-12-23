@@ -16,7 +16,7 @@ import fr.mcgivrer.prototype.ecsfmk.math.physic.World;
 /**
  * Physic Component to compute all physic stuff on entities.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class PhysicComponent implements Component {

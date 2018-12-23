@@ -18,7 +18,7 @@ import fr.mcgivrer.prototype.ecsfmk.io.InputHandler;
 import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 
 /**
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class InputSystem implements System {
@@ -115,7 +115,8 @@ public class InputSystem implements System {
 		}
 
 		// Switch debug display mode.
-		if (ih.keys[KeyEvent.VK_D]) {
+		if (ih.keys[KeyEvent.VK_D] && !ih.prevKeys[KeyEvent.VK_D]) {
+			
 			app.debug = !app.debug;
 		}
 

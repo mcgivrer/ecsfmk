@@ -29,7 +29,7 @@ import fr.mcgivrer.prototype.ecsfmk.ui.Window;
 /**
  * The main application class to animate the simulation.
  * 
- * @author Frédéric Delorme<frederic.delorme@ge.com>
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public class Application implements Runnable {
@@ -82,7 +82,9 @@ public class Application implements Runnable {
 
 		theCar.physic
 			.setWorld(world)
-			.setVelocity(new Vector2D(0.0f, 0.0f));
+			.setVelocity(new Vector2D(0.0f, 0.0f))
+			.setResistance(0.90f)
+			.setMass(2000.0f);
 
 		theCar.pos
 			.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2))
