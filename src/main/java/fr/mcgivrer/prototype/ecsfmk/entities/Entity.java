@@ -7,16 +7,24 @@
  */
 package fr.mcgivrer.prototype.ecsfmk.entities;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import fr.mcgivrer.prototype.ecsfmk.components.Component;
+
 /**
  * A Car class to manage and display a Car :)
  * 
  * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
-public class Entity {
+public class Entity<T> {
 	// Entity Name
 	public String name;
-	
+
+	private Map<String, Component> components = new HashMap<>();
+
 	/**
 	 * A new constructor to build car with all its attributes values.
 	 */
@@ -30,6 +38,19 @@ public class Entity {
 	 */
 	public Entity() {
 		super();
+	}
+
+	public boolean hasComponent(String name) {
+		return components.containsKey(name);
+	}
+
+	public Optional<Component> getComponent(String name) {
+		return Optional.of(components.get(name));
+	}
+
+	public T add(Component c) {
+		components.put(c.getName(), c);
+		return (T) this;
 	}
 
 }

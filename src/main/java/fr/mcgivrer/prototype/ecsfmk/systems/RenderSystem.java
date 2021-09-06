@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
@@ -23,7 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.mcgivrer.prototype.ecsfmk.Application;
-import fr.mcgivrer.prototype.ecsfmk.entities.Car;
+import fr.mcgivrer.prototype.ecsfmk.components.Component;
+import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
+import fr.mcgivrer.prototype.ecsfmk.components.RenderComponent;
+import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.ui.DebugHelper;
 import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
 
@@ -51,10 +55,9 @@ public class RenderSystem implements System {
 	public RenderSystem(Application app) {
 		this.app = app;
 		buff = new BufferedImage(app.win.getWidth(), app.win.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		this.g = (Graphics2D) buff.createGraphics();
+		this.g = buff.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		// g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		// RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
 	/**
@@ -64,23 +67,33 @@ public class RenderSystem implements System {
 	 * @param dt
 	 */
 	public void update(float dt) {
-		Car theCar = (Car) app.entities.get("car");
+		// clear buffer
 		g.setBackground(Color.BLACK);
 		g.clearRect(0, 0, app.win.getWidth(), app.win.getHeight());
 
-		renderCar(g, dt, theCar);
+		// render all entities
+		app.entities.values().stream()
+				.filter(v -> v.getComponent("physic").isPresent() && v.getComponent("position").isPresent())
+				.forEach(e -> {
 
+					renderEntity(g, dt, e);
+					if (app.debug) {
+						DebugHelper.showEntityInfo(g, e);
+
+					}
+				});
+
+		// display pause message (if required)
 		if (app.pause) {
 			displayPause(g);
 		}
-		if (app.debug) {
-			DebugHelper.showEntityInfo(g, theCar);
 
-		}
+		// draw buffer.
 		g.setColor(Color.GRAY);
 		g.drawRect(0, 0, app.win.getWidth() - 1, app.win.getHeight() - 1);
 		app.win.getGraphics().drawImage(buff, 0, 0, null);
 
+		// capture screen shot (if requested)
 		if (app.requestScreenshot) {
 			writeScreenshot(app, buff);
 		}
@@ -90,10 +103,8 @@ public class RenderSystem implements System {
 	/**
 	 * Write a screenshot from the current buffer.
 	 * 
-	 * @param app
-	 *            Application attached to.
-	 * @param buff
-	 *            the buffer to be written.
+	 * @param app  Application attached to.
+	 * @param buff the buffer to be written.
 	 */
 	private void writeScreenshot(Application app, BufferedImage buff) {
 		try {
@@ -110,24 +121,28 @@ public class RenderSystem implements System {
 	/**
 	 * Process the Car rendering.
 	 * 
-	 * @param g
-	 *            the Graphics2D interface to render things
-	 * @param dt
-	 *            the elapsed time (will be use with animated sprites).
-	 * @param c
-	 *            the Car to be rendered/animated.
+	 * @param g  the Graphics2D interface to render things
+	 * @param dt the elapsed time (will be use with animated sprites).
+	 * @param c  the Car to be rendered/animated.
 	 */
-	public void renderCar(Graphics2D g, float dt, Car c) {
-		g.setColor(c.render.color);
-		g.fillRect((int) c.pos.position.x, (int) c.pos.position.y, c.pos.size.width, c.pos.size.height);
+	public void renderEntity(Graphics2D g, float dt, Entity<?> c) {
 
+		Optional<Component> rendC = c.getComponent("render");
+		Optional<Component> posC = c.getComponent("position");
+
+		if (rendC.isPresent() && posC.isPresent()) {
+			RenderComponent render = (RenderComponent) rendC.get();
+			g.setColor(render.color);
+
+			PositionComponent pos = (PositionComponent) posC.get();
+			g.fillRect((int) pos.position.x, (int) pos.position.y, pos.size.width, pos.size.height);
+		}
 	}
 
 	/**
 	 * Display translated Pause message
 	 * 
-	 * @param g
-	 *            the Graphics2D interface to render things.
+	 * @param g the Graphics2D interface to render things.
 	 */
 	private void displayPause(Graphics2D g) {
 		String txtPause = Messages.get("main.pause.label");

@@ -1,4 +1,5 @@
-@startuml
+@startuml "ECS framework"
+
 class PositionComponent [[java:fr.mcgivrer.prototype.ecsfmk.components.PositionComponent]] {
 	+Rectangle size
 	+PositionComponent()
@@ -126,21 +127,23 @@ class InputHandler [[java:fr.mcgivrer.prototype.ecsfmk.io.InputHandler]] {
 }
 Window --> "1" InputHandler : ih
 class Application [[java:fr.mcgivrer.prototype.ecsfmk.Application]] {
-	-{static}Logger logger
-	+Map<String,Entity> entities
-	+boolean exit
-	+boolean pause
-	+boolean debug
-	+Application()
-	-void initialize()
-	+void run()
-	-void postRenderOperation()
-	-void waitFPS()
-	-void dispose()
-	+void input(InputHandler ih, float dt)
-	+void update(float dt)
-	+void render(float dt)
-	+{static}void main(String[] args)
+	-{static
+}
+Logger logger
++Map<String,Entity> entities
++boolean exit
++boolean pause
++boolean debug
++Application()
+-void initialize()
++void run()
+-void postRenderOperation()
+-void waitFPS()
+-void dispose()
++void input(InputHandler ih, float dt)
++void update(float dt)
++void render(float dt)
++{static}void main(String[] args)
 }
 class Car [[java:fr.mcgivrer.prototype.ecsfmk.entities.Car]] {
 }
@@ -161,9 +164,9 @@ interface Runnable [[java:java.lang.Runnable]] {
 }
 Runnable <|.. Application
 class World [[java:fr.mcgivrer.prototype.ecsfmk.math.physic.World]] {
-	+World()
-	+World(Vector2D vGravity)
-	+void clear()
++World()
++World(Vector2D vGravity)
++void clear()
 }
 class Vector2D [[java:fr.mcgivrer.prototype.ecsfmk.math.Vector2D]] {
 }
@@ -172,9 +175,11 @@ class Vector2D [[java:fr.mcgivrer.prototype.ecsfmk.math.Vector2D]] {
 }
 World --> "1" Vector2D : gravity
 class InputSystem [[java:fr.mcgivrer.prototype.ecsfmk.systems.InputSystem]] {
-	-{static}Logger logger
-	+InputSystem(Application app, InputHandler ih)
-	+void update(float dt)
+-{static
+}
+Logger logger
++InputSystem(Application app, InputHandler ih)
++void update(float dt)
 }
 class Application [[java:fr.mcgivrer.prototype.ecsfmk.Application]] {
 }
@@ -186,31 +191,36 @@ interface System [[java:fr.mcgivrer.prototype.ecsfmk.systems.System]] {
 }
 System <|.. InputSystem
 interface Component [[java:fr.mcgivrer.prototype.ecsfmk.components.Component]] {
-	String getName()
+String getName()
 }
 class Vector2D [[java:fr.mcgivrer.prototype.ecsfmk.math.Vector2D]] {
-	+{static}Vector2D ZERO
-	+{static}Vector2D IDENTITY
-	+float x
-	+float y
-	+Vector2D()
-	+Vector2D(float x, float y)
-	+float distance(Vector2D v)
-	+Vector2D normalize()
-	+Vector2D add(Vector2D v)
-	+Vector2D multiply(float factor)
-	+String toString()
-	+Vector2D substract(Vector2D v)
-	+double dot(Vector2D v1)
++{static}Vector2D ZERO
++{static}Vector2D IDENTITY
++float x
++float y
++Vector2D()
++Vector2D(float x, float y)
++float distance(Vector2D v)
++Vector2D normalize()
++Vector2D add(Vector2D v)
++Vector2D multiply(float factor)
++String toString()
++Vector2D substract(Vector2D v)
++double dot(Vector2D v1)
 }
 class Messages [[java:fr.mcgivrer.prototype.ecsfmk.ui.Messages]] {
-	-{static}ResourceBundle messages
-	+{static}String get(String key)
+-{static
+}
+ResourceBundle messages
++{
+static
+}
+String get(String key)
 }
 class RenderComponent [[java:fr.mcgivrer.prototype.ecsfmk.components.RenderComponent]] {
-	+Color color
-	+RenderComponent()
-	+String getName()
++Color color
++RenderComponent()
++String getName()
 }
 interface Component [[java:fr.mcgivrer.prototype.ecsfmk.components.Component]] {
 }
