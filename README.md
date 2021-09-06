@@ -2,6 +2,7 @@
 
 Entity Component System framework
 
+[![Java CI with Maven](https://github.com/mcgivrer/ecsfmk/actions/workflows/maven.yml/badge.svg)](https://github.com/mcgivrer/ecsfmk/actions/workflows/maven.yml)
 
 ## Introduction
 
