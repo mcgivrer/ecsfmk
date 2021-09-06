@@ -16,6 +16,7 @@ import fr.mcgivrer.prototype.ecsfmk.components.PhysicComponent;
 import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
 import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
+import fr.mcgivrer.prototype.ecsfmk.math.physic.World;
 
 /**
  * This system is dedicated to Car animation and computation.
@@ -23,11 +24,13 @@ import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
  * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
-public class MoveSystem implements System {
+public class PhysicSystem implements System {
 	// parent application.
 	public Application app;
 	// Viewport dimension useful to constrain position of the car.
 	public Dimension dimension;
+
+	private World world;
 
 	/**
 	 * Default constructor for the Car System
@@ -35,7 +38,7 @@ public class MoveSystem implements System {
 	 * @param app the parent application
 	 * @param dim the dimension of the window viewport.
 	 */
-	public MoveSystem(Application app, Dimension dim) {
+	public PhysicSystem(Application app, Dimension dim) {
 		this.app = app;
 		this.dimension = dim;
 	}
@@ -45,36 +48,47 @@ public class MoveSystem implements System {
 	 */
 	public void update(float dt) {
 		if (!app.pause) {
-			for (Entity c : app.entities.values()) {
-				// retrieve components
-				Optional<Component> phyC = c.getComponent("physic");
-				Optional<Component> posC = c.getComponent("position");
+			app.entities.values().stream()
+					.filter(v -> v.getComponent("physic").isPresent() && v.getComponent("position").isPresent())
+					.forEach(e -> {
 
-				if (phyC.isPresent() && posC.isPresent()) {
-					PhysicComponent physic = (PhysicComponent) phyC.get();
-					PositionComponent pos = (PositionComponent) posC.get();
+						// retrieve components
+						Optional<Component> phyC = e.getComponent("physic");
+						Optional<Component> posC = e.getComponent("position");
 
-					float t = dt * 0.005f;
+						if (phyC.isPresent() && posC.isPresent()) {
+							PhysicComponent physic = (PhysicComponent) phyC.get();
+							PositionComponent pos = (PositionComponent) posC.get();
 
-					// -- Update Physics (System)
-					physic.forces.addAll(physic.world.forces);
+							float t = dt * 0.005f;
 
-					for (Vector2D v : physic.forces) {
-						physic.acceleration = physic.acceleration.add(v);
-					}
-					physic.acceleration = physic.acceleration.multiply(physic.resistance).multiply(1.0f / physic.mass)
-							.multiply(50.0f * dt);
-					// compute velocity
-					physic.velocity.x += (physic.acceleration.x * t * t);
-					physic.velocity.y += (physic.acceleration.y * t * t);
+							// -- Update Physics (System)
+							// apply world global physic forces from the engine.
+							if (world != null) {
+								physic.forces.addAll(world.forces);
+							}
+							// apply specific World's forces from entity's physic component
+							if (physic.world != null) {
+								physic.forces.addAll(physic.world.forces);
+							}
 
-					// -- update Position (System)
-					pos.position.x += 0.5f * (physic.velocity.x * t);
-					pos.position.y += 0.5f * (physic.velocity.y * t);
+							for (Vector2D v : physic.forces) {
+								physic.acceleration = physic.acceleration.add(v);
+							}
+							physic.acceleration = physic.acceleration.multiply(physic.resistance)
+									.multiply(1.0f / physic.mass).multiply(50.0f * dt);
+							// compute velocity
+							physic.velocity.x += (physic.acceleration.x * t * t);
+							physic.velocity.y += (physic.acceleration.y * t * t);
 
-					keepConstrainedTo(physic, pos, dimension);
-				}
-			}
+							// -- update Position (System)
+							pos.position.x += 0.5f * (physic.velocity.x * t);
+							pos.position.y += 0.5f * (physic.velocity.y * t);
+
+							keepConstrainedTo(physic, pos, dimension);
+
+						}
+					});
 		}
 	}
 

@@ -15,8 +15,7 @@ class Car {
 }
 ```
 
-![illustrations/car-class-diagram.png](illustrations/car-class-diagram.png 
-'Car UML class diagram')
+![illustrations/car-class-diagram.png](illustrations/car-class-diagram.png "Car UML class diagram")
 
 ### The Refactored Car entity/component oriented.
 
@@ -74,8 +73,7 @@ class PositionComponent implements Component{
 }
 ```
 
-![illustrations/car-entity-components-class-diagram.png](illustrations/car-entity-components-class-diagram.png 
-'Car UML class diagram')
+![illustrations/car-entity-components-class-diagram.png](illustrations/car-entity-components-class-diagram.png "Car UML class diagram")
 
 ### The Systems
 
@@ -85,7 +83,7 @@ What is a System ?
 
 ```Java
 interface System {
-    public void update(Application app, float dt); 
+    public void update(Application app, float dt);
 }
 ```
 
@@ -118,3 +116,31 @@ class RenderSystem implements System{
   }
 }
 ```
+
+## Moving to a more framework oriented implementation
+
+Replace components attribute's from `Car` by a `Component` map in the `Entity` class.
+
+```java
+class Car extends Entity{
+  public Car(String name){
+    add(new PositionCompoent());
+    add(new PhysicCompoent());
+    add(new RenderCompoent());
+  }
+}
+```
+
+And now, the `Entity` is mosdified to propose a map of components, and the capability to add component to this one.
+
+```java
+class Entity<T>{
+  public String name;
+  private Map<String, Component> components;
+  public Entity<T> add(Component c){};
+}
+```
+
+And the implemented `System` must be adapted to use `Entity` objects and no more `Car` class.
+
+The `MoveSystem` is now maganing a bunch of `Entity` and not only `Car`. It will parse the `Applicaiton#entities` map, and detect the ones having the right `Components` to move the matching entities.

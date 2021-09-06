@@ -22,7 +22,7 @@ import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.io.InputHandler;
 import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 import fr.mcgivrer.prototype.ecsfmk.math.physic.World;
-import fr.mcgivrer.prototype.ecsfmk.systems.MoveSystem;
+import fr.mcgivrer.prototype.ecsfmk.systems.PhysicSystem;
 import fr.mcgivrer.prototype.ecsfmk.systems.PlayerInputSystem;
 import fr.mcgivrer.prototype.ecsfmk.systems.RenderSystem;
 import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
@@ -58,7 +58,7 @@ public class Application implements Runnable {
 
 	public Window win = null;
 
-	private MoveSystem moveSystem;
+	private PhysicSystem moveSystem;
 	private RenderSystem renderSystem;
 	private PlayerInputSystem inputSystem;
 
@@ -75,22 +75,21 @@ public class Application implements Runnable {
 	 * Initialize object for this app.
 	 */
 	private void initialize() {
-		moveSystem = new MoveSystem(this, win.getDimension());
+		moveSystem = new PhysicSystem(this, win.getDimension());
 		renderSystem = new RenderSystem(this);
 		inputSystem = new PlayerInputSystem(this, win.getInputHandler());
 
 		World world = new World(new Vector2D(0.0f, 98.1f));
 		theCar = new Car("car");
 
-		if (theCar.getComponent("physic").isPresent() && theCar.getComponent("position").isPresent()) {
-			PhysicComponent carPhysic = (PhysicComponent) theCar.getComponent("physic").get();
-			carPhysic.setWorld(world).setVelocity(new Vector2D(0.0f, 0.0f)).setResistance(0.90f).setMass(2000.0f);
-			PositionComponent carPos = (PositionComponent) theCar.getComponent("position").get();
-			carPos.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2)).setSize(new Rectangle(50, 20));
-
+		theCar.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2))
+			.setSize(new Rectangle(50, 20))
+			.setVelocity(new Vector2D(0.0f, 0.0f))
+			.setResistance(0.90f)
+			.setMass(2000.0f)
+			.setWorld(world);
+			
 			add(theCar);
-
-		}
 	}
 
 	private void add(Entity entity) {

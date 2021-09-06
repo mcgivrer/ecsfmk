@@ -67,24 +67,33 @@ public class RenderSystem implements System {
 	 * @param dt
 	 */
 	public void update(float dt) {
+		// clear buffer
 		g.setBackground(Color.BLACK);
 		g.clearRect(0, 0, app.win.getWidth(), app.win.getHeight());
-		for (Entity c : app.entities.values()) {
-			renderEntity(g, dt, c);
-			if (app.debug) {
-				DebugHelper.showEntityInfo(g, c);
 
-			}
-		}
+		// render all entities
+		app.entities.values().stream()
+				.filter(v -> v.getComponent("physic").isPresent() && v.getComponent("position").isPresent())
+				.forEach(e -> {
 
+					renderEntity(g, dt, e);
+					if (app.debug) {
+						DebugHelper.showEntityInfo(g, e);
+
+					}
+				});
+
+		// display pause message (if required)
 		if (app.pause) {
 			displayPause(g);
 		}
 
+		// draw buffer.
 		g.setColor(Color.GRAY);
 		g.drawRect(0, 0, app.win.getWidth() - 1, app.win.getHeight() - 1);
 		app.win.getGraphics().drawImage(buff, 0, 0, null);
 
+		// capture screen shot (if requested)
 		if (app.requestScreenshot) {
 			writeScreenshot(app, buff);
 		}
