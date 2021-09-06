@@ -8,9 +8,13 @@
 package fr.mcgivrer.prototype.ecsfmk.systems;
 
 import java.awt.Dimension;
+import java.util.Optional;
 
 import fr.mcgivrer.prototype.ecsfmk.Application;
-import fr.mcgivrer.prototype.ecsfmk.entities.Car;
+import fr.mcgivrer.prototype.ecsfmk.components.Component;
+import fr.mcgivrer.prototype.ecsfmk.components.PhysicComponent;
+import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
+import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 
 /**
@@ -28,10 +32,8 @@ public class MoveSystem implements System {
 	/**
 	 * Default constructor for the Car System
 	 * 
-	 * @param app
-	 *            the parent application
-	 * @param dim
-	 *            the dimension of the window viewport.
+	 * @param app the parent application
+	 * @param dim the dimension of the window viewport.
 	 */
 	public MoveSystem(Application app, Dimension dim) {
 		this.app = app;
@@ -42,28 +44,38 @@ public class MoveSystem implements System {
 	 * Compute physic behavior and position of the car.
 	 */
 	public void update(float dt) {
-		Car c = (Car) app.entities.get("car");
-		float t = dt * 0.005f;
+		if (!app.pause) {
+			for (Entity c : app.entities.values()) {
+				// retrieve components
+				Optional<Component> phyC = c.getComponent("physic");
+				Optional<Component> posC = c.getComponent("position");
 
-		// -- Update Physics (System)
-		c.physic.forces.addAll(c.physic.world.forces);
-		// logger.debug("acceleration = {}", c.physic.acceleration);
-		for (Vector2D v : c.physic.forces) {
-			c.physic.acceleration = c.physic.acceleration.add(v);
+				if (phyC.isPresent() && posC.isPresent()) {
+					PhysicComponent physic = (PhysicComponent) phyC.get();
+					PositionComponent pos = (PositionComponent) posC.get();
+
+					float t = dt * 0.005f;
+
+					// -- Update Physics (System)
+					physic.forces.addAll(physic.world.forces);
+
+					for (Vector2D v : physic.forces) {
+						physic.acceleration = physic.acceleration.add(v);
+					}
+					physic.acceleration = physic.acceleration.multiply(physic.resistance).multiply(1.0f / physic.mass)
+							.multiply(50.0f * dt);
+					// compute velocity
+					physic.velocity.x += (physic.acceleration.x * t * t);
+					physic.velocity.y += (physic.acceleration.y * t * t);
+
+					// -- update Position (System)
+					pos.position.x += 0.5f * (physic.velocity.x * t);
+					pos.position.y += 0.5f * (physic.velocity.y * t);
+
+					keepConstrainedTo(physic, pos, dimension);
+				}
+			}
 		}
-		c.physic.acceleration = c.physic.acceleration.multiply(c.physic.resistance).multiply(1.0f / c.physic.mass)
-				.multiply(50.0f * dt);
-		// compute velocity
-		c.physic.velocity.x += (c.physic.acceleration.x * t * t);
-		c.physic.velocity.y += (c.physic.acceleration.y * t * t);
-		// logger.debug("velocity = {}", c.physic.velocity);
-
-		// -- update Position (System)
-		c.pos.position.x += 0.5f * (c.physic.velocity.x * t);
-		c.pos.position.y += 0.5f * (c.physic.velocity.y * t);
-		// logger.debug("position = {}", this.position);
-
-		keepConstrainedTo(c, dimension);
 	}
 
 	/**
@@ -72,24 +84,38 @@ public class MoveSystem implements System {
 	 * @param c
 	 * @param dim
 	 */
-	public void keepConstrainedTo(Car c, Dimension dim) {
-		if (c.pos.position.x > dim.getWidth() - c.pos.size.width) {
-			c.pos.position.x = (float) dim.getWidth() - c.pos.size.width;
-			c.physic.velocity.x *= -1 * c.physic.elasticity;
+	public void keepConstrainedTo(PhysicComponent physic, PositionComponent pos, Dimension dim) {
+		if (pos.position.x > dim.getWidth() - pos.size.width) {
+			pos.position.x = (float) dim.getWidth() - pos.size.width;
+			physic.velocity.x *= -1 * physic.elasticity;
 		}
 
-		if (c.pos.position.x <= 0) {
-			c.pos.position.x = 0;
-			c.physic.velocity.x *= -1 * c.physic.elasticity;
+		if (pos.position.x <= 0) {
+			pos.position.x = 0;
+			physic.velocity.x *= -1 * physic.elasticity;
 
 		}
-		if (c.pos.position.y > dim.getHeight() - c.pos.size.height) {
-			c.pos.position.y = (float) dim.getHeight() - c.pos.size.height;
-			c.physic.velocity.y *= -1 * c.physic.elasticity;
+		if (pos.position.y > dim.getHeight() - pos.size.height) {
+			pos.position.y = (float) dim.getHeight() - pos.size.height;
+			physic.velocity.y *= -1 * physic.elasticity;
 		}
-		if (c.pos.position.y <= 0) {
-			c.pos.position.y = 0.0f;
-			c.physic.velocity.y *= -1 * c.physic.elasticity;
+		if (pos.position.y <= 0) {
+			pos.position.y = 0.0f;
+			physic.velocity.y *= -1 * physic.elasticity;
+		}
+	}
+
+	@Override
+	public void postOperation() {
+		if (!app.pause) {
+			for (Entity e : app.entities.values()) {
+				Optional<PhysicComponent> physic = (Optional<PhysicComponent>) e.getComponent("physic");
+
+				if (physic.isPresent()) {
+					physic.get().forces.clear();
+				}
+
+			}
 		}
 	}
 

@@ -15,13 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.mcgivrer.prototype.ecsfmk.components.PhysicComponent;
+import fr.mcgivrer.prototype.ecsfmk.components.PositionComponent;
 import fr.mcgivrer.prototype.ecsfmk.entities.Car;
 import fr.mcgivrer.prototype.ecsfmk.entities.Entity;
 import fr.mcgivrer.prototype.ecsfmk.io.InputHandler;
 import fr.mcgivrer.prototype.ecsfmk.math.Vector2D;
 import fr.mcgivrer.prototype.ecsfmk.math.physic.World;
 import fr.mcgivrer.prototype.ecsfmk.systems.MoveSystem;
-import fr.mcgivrer.prototype.ecsfmk.systems.InputSystem;
+import fr.mcgivrer.prototype.ecsfmk.systems.PlayerInputSystem;
 import fr.mcgivrer.prototype.ecsfmk.systems.RenderSystem;
 import fr.mcgivrer.prototype.ecsfmk.ui.Messages;
 import fr.mcgivrer.prototype.ecsfmk.ui.Window;
@@ -56,9 +58,9 @@ public class Application implements Runnable {
 
 	public Window win = null;
 
-	private MoveSystem carSystem;
+	private MoveSystem moveSystem;
 	private RenderSystem renderSystem;
-	private InputSystem inputSystem;
+	private PlayerInputSystem inputSystem;
 
 	public boolean requestScreenshot;
 
@@ -73,24 +75,26 @@ public class Application implements Runnable {
 	 * Initialize object for this app.
 	 */
 	private void initialize() {
-		carSystem = new MoveSystem(this, win.getDimension());
+		moveSystem = new MoveSystem(this, win.getDimension());
 		renderSystem = new RenderSystem(this);
-		inputSystem = new InputSystem(this, win.getInputHandler());
+		inputSystem = new PlayerInputSystem(this, win.getInputHandler());
 
 		World world = new World(new Vector2D(0.0f, 98.1f));
 		theCar = new Car("car");
 
-		theCar.physic
-			.setWorld(world)
-			.setVelocity(new Vector2D(0.0f, 0.0f))
-			.setResistance(0.90f)
-			.setMass(2000.0f);
+		if (theCar.getComponent("physic").isPresent() && theCar.getComponent("position").isPresent()) {
+			PhysicComponent carPhysic = (PhysicComponent) theCar.getComponent("physic").get();
+			carPhysic.setWorld(world).setVelocity(new Vector2D(0.0f, 0.0f)).setResistance(0.90f).setMass(2000.0f);
+			PositionComponent carPos = (PositionComponent) theCar.getComponent("position").get();
+			carPos.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2)).setSize(new Rectangle(50, 20));
 
-		theCar.pos
-			.setPosition(new Vector2D(win.getWidth() / 2, win.getHeight() / 2))
-			.setSize(new Rectangle(50, 20));
+			add(theCar);
 
-		entities.put(theCar.name, theCar);
+		}
+	}
+
+	private void add(Entity entity) {
+		entities.put(entity.name, entity);
 	}
 
 	/**
@@ -105,13 +109,11 @@ public class Application implements Runnable {
 			currentTime = System.nanoTime();
 			dt = Math.max((currentTime - previousTime) / 1000000.0f, 20.0f);
 			input(win.getInputHandler(), dt);
-			if (!pause) {
-				update(dt);
-			}
+			update(dt);
 			render(dt);
 			waitFPS();
 			previousTime = currentTime;
-			postRenderOperation();
+			postOperation();
 		}
 		dispose();
 	}
@@ -119,8 +121,8 @@ public class Application implements Runnable {
 	/**
 	 * 
 	 */
-	private void postRenderOperation() {
-		theCar.physic.forces.clear();
+	private void postOperation() {
+		moveSystem.postOperation();
 	}
 
 	/**
@@ -157,7 +159,7 @@ public class Application implements Runnable {
 	 * @param dt
 	 */
 	public void update(float dt) {
-		carSystem.update(dt);
+		moveSystem.update(dt);
 	}
 
 	/**

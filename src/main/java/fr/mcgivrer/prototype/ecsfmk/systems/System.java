@@ -17,8 +17,15 @@ public interface System {
 	/**
 	 * This is where the magic run.
 	 * 
-	 * @param dt
-	 *            elapsed time since previous call.
+	 * @param dt elapsed time since previous call.
 	 */
 	public void update(float dt);
+
+	public default void preOperation() {
+
+	}
+
+	public default void postOperation() {
+
+	}
 }

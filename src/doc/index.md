@@ -23,6 +23,7 @@ class Car {
 #### The car entity
 
 This is the basic entity to be inherited by business entity.
+
 ```Java
 class Entity {
     String name;
@@ -48,7 +49,7 @@ class Car extends Entity{
 Position component containing position and size information.
 
 ```Java
-class PositionComponent implement Component{
+class PositionComponent implements Component{
     Vector2D position;
     Vector2D size;
     Vector2D velocity;
@@ -62,7 +63,7 @@ class PositionComponent implement Component{
 The physic components containing all physic computation needed data.
 
 ```Java
-class PositionComponent implement Component{
+class PositionComponent implements Component{
     Vector2D position;
     Vector2D size;
     Vector2D velocity;
@@ -73,7 +74,7 @@ class PositionComponent implement Component{
 }
 ```
 
-![illustrations/car-entity-components-class-diragram.png](illustrations/car-entity-components-class-diragram.png 
+![illustrations/car-entity-components-class-diagram.png](illustrations/car-entity-components-class-diagram.png 
 'Car UML class diagram')
 
 ### The Systems

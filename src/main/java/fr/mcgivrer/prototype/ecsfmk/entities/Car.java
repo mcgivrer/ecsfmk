@@ -17,19 +17,13 @@ import fr.mcgivrer.prototype.ecsfmk.components.RenderComponent;
  * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
-public class Car extends Entity {
-	// Position component to manage car position :)
-	public PositionComponent pos = new PositionComponent();
-	// Physic component to compute physic about that car.
-	public PhysicComponent physic = new PhysicComponent();
-	// an dfinally a rendering component to render tings.
-	public RenderComponent render = new RenderComponent();
+public class Car extends Entity<Car> {
 
 	/**
 	 * A default Constructor.
 	 */
 	public Car() {
-		super();
+		this("mycar");
 	}
 
 	/**
@@ -39,6 +33,12 @@ public class Car extends Entity {
 	 */
 	public Car(String name) {
 		super(name);
+		// Position component to manage car position :)
+		add(new PositionComponent());
+		// Physic component to compute physic about that car.
+		add(new PhysicComponent());
+		// an dfinally a rendering component to render tings.
+		add(new RenderComponent());
 	}
 
 }
