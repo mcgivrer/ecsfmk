@@ -20,3 +20,5 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      env:
+        CUCUMBER_PUBLISH_TOKEN=382e9047-a9a4-47a2-8ee7-8e84a3ba837e
