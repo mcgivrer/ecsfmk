@@ -50,6 +50,11 @@ public class PhysicSystem implements System, UpdateAction {
         return SERVICE_NAME;
     }
 
+    @Override
+    public int getPriority() {
+        return 1;
+    }
+
     /**
      * Compute physic behavior and position of the car.
      */

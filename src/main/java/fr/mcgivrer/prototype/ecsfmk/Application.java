@@ -59,10 +59,6 @@ public class Application implements Runnable {
 
     public Window win;
 
-    private PhysicSystem moveSystem;
-    private RenderSystem renderSystem;
-    private PlayerInputSystem pis;
-
     public boolean requestScreenshot;
 
     /**
@@ -76,12 +72,10 @@ public class Application implements Runnable {
      * Initialize object for this app.
      */
     private void initialize() {
-        PlayerInputSystem pis = new PlayerInputSystem(this, win.getInputHandler());
-        SystemManager.get(this).add(pis);
-        moveSystem = new PhysicSystem(this, win.getDimension());
-        SystemManager.get(this).add(moveSystem);
-        renderSystem = new RenderSystem(this);
-        SystemManager.get(this).add(renderSystem);
+        SystemManager.get(this);
+        SystemManager.add(new PlayerInputSystem(this, win.getInputHandler()));
+        SystemManager.add(new PhysicSystem(this, win.getDimension()));
+        SystemManager.add(new RenderSystem(this));
 
         World world = new World(new Vector2D(0.0f, 98.1f));
         theCar = new Car("car");
@@ -125,7 +119,7 @@ public class Application implements Runnable {
      *
      */
     private void postOperation() {
-        moveSystem.postOperation();
+        SystemManager.all().forEach(s -> s.postOperation());
     }
 
     /**
@@ -154,7 +148,7 @@ public class Application implements Runnable {
      * @param dt the elapsed time since previous call
      */
     public void input(InputHandler ih, float dt) {
-        SystemManager.get(this).findAction(InputAction.class).forEach(ia -> ((InputAction) ia).input(ih, dt));
+        SystemManager.find(InputAction.class).forEach(ia -> ((InputAction) ia).input(ih, dt));
     }
 
     /**
@@ -163,7 +157,7 @@ public class Application implements Runnable {
      * @param dt the elapsed time since previous call.
      */
     public void update(float dt) {
-        SystemManager.get(this).findAction(UpdateAction.class).forEach(ua -> ((UpdateAction) ua).update(dt));
+        SystemManager.find(UpdateAction.class).forEach(ua -> ((UpdateAction) ua).update(dt));
     }
 
     /**
@@ -172,7 +166,7 @@ public class Application implements Runnable {
      * @param dt the elapsed time since previous call.
      */
     public void render(float dt) {
-        SystemManager.get(this).findAction(RenderAction.class).forEach(ra -> ((RenderAction) ra).render(dt));
+        SystemManager.find(RenderAction.class).forEach(ra -> ((RenderAction) ra).render(dt));
     }
 
     /**
