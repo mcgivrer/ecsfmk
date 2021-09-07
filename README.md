@@ -3,7 +3,7 @@
 Entity Component System framework
 
 [![Java CI with Maven](https://github.com/mcgivrer/ecsfmk/actions/workflows/maven.yml/badge.svg)](https://github.com/mcgivrer/ecsfmk/actions/workflows/maven.yml)
-[![Cucumber Reports](https://reports.cucumber.io/report-collections/97be0db2-1c38-4565-ab3c-292628fec31a/badge)](https://reports.cucumber.io/report-collections/97be0db2-1c38-4565-ab3c-292628fec31a "See the latest Cucumber Reports")
+[![Cucumber Reports](https://messages.cucumber.io/api/report-collections/97be0db2-1c38-4565-ab3c-292628fec31a/badge)](https://reports.cucumber.io/report-collections/97be0db2-1c38-4565-ab3c-292628fec31a "See the latest Cucumber Reports")
 
 ## Introduction
 
