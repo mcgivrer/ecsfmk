@@ -51,6 +51,11 @@ public class PlayerInputSystem implements System, InputAction {
         return SERVICE_NAME;
     }
 
+    @Override
+    public int getPriority() {
+        return 1;
+    }
+
     /**
      * Detect input keys and process Car data accordingly.
      */

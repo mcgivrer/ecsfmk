@@ -156,8 +156,6 @@ And the implemented `System` must be adapted to use `Entity` objects and no more
 The `MoveSystem` is now managing a bunch of `Entity` and not only `Car`. It will parse the `Applicaiton#entities` map,
 and detect the ones having the right `Components` to move the matching entities.
 
-
-
 ### One SystemManager to rules'em all
 
 To get the full hand on the implemented System, and free all resources when stopping your application, the best way to
@@ -225,3 +223,156 @@ class Game {
 
 }
 ```
+
+## Upgrading SystemManager
+
+To let the Systems implements dedicated processing, we are goinfg to upgrade System and SystemManager.
+
+In our Application, we need to process 3 kind of steps:
+
+- input
+- update
+- render.
+
+Those steps corresponds to the 3 operations that must be performed by the main application loop.
+
+let's define those actions :
+
+- Input action : this is the action where all key input must be managed
+- Update action : all the entities in the application must be updated according to obey their own behaviors.
+- Render action : when all the previous operations are done, we need to display things, it the role of this action.
+
+Each Action must be clearly identified. So we are going to create a Contract between the rules of those action and their
+natural operations:
+
+- `InputAction` will provide an input method,
+- `UpdateAction` interface will provide an update method,
+- `RenderAction`will fix the render method.
+
+### the Actions
+
+All those specific operation are actions. to identify any ofe those actions we will implement an Action interface:
+
+```java
+interface Action {
+}
+```
+
+Action is an empty one because it will be the master of all actions.
+
+#### InputAction
+
+the Input action must implement an input management:
+
+```java
+interface InputAction extends Action {
+    void input(InputHandler ih, float dt);
+}
+```
+
+#### UpdateAction
+
+the update action will implement an update :
+
+```java
+interface UpdateAction extends Action {
+    void update(float dt);
+}
+```
+
+#### RenderAction
+
+And finally, the Render !
+
+```java
+interface RenderAction extends Action {
+    void render(float dt);
+}
+```
+
+### XxxxSystem ?
+
+Now we had defined the Actrion, we will be able to define Systems implementing those actions:
+
+#### InputSystem
+
+this specific System will implements the System AND the InputAction interface :
+
+```java
+class InputSystem implements System, InputAction {
+
+    //---- From System interface ----
+    @Override
+    public String getName() {
+        return SERVICE_NAME;
+    }
+
+    @Override
+    public int getPriority() {
+        return 1;
+    }
+
+    //---- from InputAction ----
+    public void input(InputHandler ih, float dt) {
+        //...
+    }
+}
+```
+
+You will have the same thing for the other System.
+
+### Adding new Find capability
+
+the SystemManager must be modified in its add and find methods to add with correct sorting and find the right classes
+corresponding to the needed actions.
+
+```java
+class SystemManager {
+    //...
+    Map<Class<? extends Action>, List<System>> allSystems = new HashMap<>();
+
+    // adding a System to the list
+    private void addSystem(System system) {
+        //...
+        addSystemToAction(system);
+    }
+
+    // adding the System to the corresponding internal action list.
+    private void addSystemToAction(System system) {
+        for (Class cls : system.getClass().getInterfaces()) {
+            if (cls != System.class) {
+                if (!allSystems.containsKey(cls)) {
+                    allSystems.put(cls, new ArrayList<System>());
+                }
+                allSystems.get(cls).add(system);
+            }
+        }
+    }
+
+    //...
+
+    // Retrieve the System corresponding to a specific action.
+    public List<? extends System> findSystem(Class<? extends Action> action) {
+        List<System> list;
+        list = allSystems.get(action);
+        return list;
+    }
+}
+```
+
+And now you can easily add a System to the SystemManager and retrieve it (we won't detail the static methods to access
+the SystemMnagaer API)
+
+```java
+import fr.mcgivrer.prototype.ecsfmk.systems.SystemManager;
+
+class Game {
+
+    void update(float dt) {
+        SystemManager.find(UpdateAction.class)
+                .forEach(ua -> ((UpdateAction) ua).update(dt));
+    }
+}
+```
+
+That's it !

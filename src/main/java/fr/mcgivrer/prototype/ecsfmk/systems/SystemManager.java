@@ -3,10 +3,7 @@ package fr.mcgivrer.prototype.ecsfmk.systems;
 import fr.mcgivrer.prototype.ecsfmk.Application;
 import fr.mcgivrer.prototype.ecsfmk.systems.api.Action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SystemManager {
@@ -29,7 +26,19 @@ public class SystemManager {
         return SystemManager.instance;
     }
 
-    public void add(System system) {
+    public static void add(System system) {
+        SystemManager.instance.addSystem(system);
+    }
+
+    public static List<? extends System> find(Class<? extends Action>  action){
+        return SystemManager.instance.findSystem(action);
+    }
+
+    public static Collection<? extends System> all() {
+        return SystemManager.instance.systems.values();
+    }
+
+    private void addSystem(System system) {
         assert system == null : "Can not add a null service";
         assert systems.containsKey(system.getName()) : "System " + system.getName() + " already declared";
         systems.put(system.getName(), system);
@@ -59,7 +68,7 @@ public class SystemManager {
      * @param action the action to retrieve system for.
      * @return a List of services implementing the `action`.
      */
-    public List<? extends System> findAction(Class<? extends Action> action) {
+    public List<? extends System> findSystem(Class<? extends Action> action) {
         List<System> list;
         list = allSystems.get(action);
         return list;

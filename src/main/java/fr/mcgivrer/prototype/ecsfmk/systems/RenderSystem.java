@@ -63,6 +63,11 @@ public class RenderSystem implements System, RenderAction {
     }
 
     @Override
+    public int getPriority() {
+        return 1;
+    }
+
+    @Override
     public void render(float dt) {
         // clear buffer
         g.setBackground(Color.BLACK);

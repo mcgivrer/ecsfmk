@@ -24,6 +24,8 @@ public interface System {
 
     String getName();
 
+    int getPriority();
+
 
     default void preOperation() {
 
