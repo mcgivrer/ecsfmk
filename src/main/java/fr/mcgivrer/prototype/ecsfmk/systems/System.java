@@ -1,7 +1,7 @@
-/**
- * McGivrer's Blog 
+/*
+ * McGivrer's Blog
  *
- * Entity Component System framework 
+ * Entity Component System framework
  *
  * @copyright 2018
  */
@@ -9,23 +9,27 @@ package fr.mcgivrer.prototype.ecsfmk.systems;
 
 /**
  * The interface to create new System.
- * 
+ * A System must inherit one ore more on the following interface :
+ *
+ * - {@link fr.mcgivrer.prototype.ecsfmk.systems.api.InputAction},
+ * - {@link fr.mcgivrer.prototype.ecsfmk.systems.api.UpdateAction}
+ * - and {@link fr.mcgivrer.prototype.ecsfmk.systems.api.RenderAction }
+ *
+ * @see fr.mcgivrer.prototype.ecsfmk.systems.api.Action
+ *
  * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public interface System {
-	/**
-	 * This is where the magic run.
-	 * 
-	 * @param dt elapsed time since previous call.
-	 */
-	public void update(float dt);
 
-	public default void preOperation() {
+    String getName();
 
-	}
 
-	public default void postOperation() {
+    default void preOperation() {
 
-	}
+    }
+
+    default void postOperation() {
+
+    }
 }
